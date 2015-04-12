@@ -37,6 +37,7 @@ Class B: Other extensions/modules/plugins/bundles
 * OSGi (eclipse.org/rt: eclipse.org/equinox, eclipse.org/virgo, eclipse.org/gemini; felix.apache.org & karaf.apache.org; bndtools.org BND Tools; Spring Dynamic Modulees DM)
 * http://jpf.sourceforge.net
 * https://code.google.com/p/jspf/ : No hot unload
+* https://code.google.com/p/impala/
 
 Class C: Approaches between A/B
 * https://github.com/jmarranz/relproxy/ : Seems to be intended to (re)load one class, only, e.g. for a single Web View
