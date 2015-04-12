@@ -4,7 +4,7 @@
   - [ ] Forwarding Mod using Hot Chai
   - [ ] Look into server src and patch
 
-- [ ] ch.vorburger.hotea.compilewatchedfiles
+- [ ] ch.vorburger.hotea.compilewatchedfiles, using .. http://commons.apache.org/proper/commons-jci/usage.html ?
 - [ ] ch.vorburger.hotea.compilewatchedfiles.xtend
 
 - [ ] HotClassLoaderRegistry abstraction idea impl (if even needed/useful)
