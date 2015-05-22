@@ -28,6 +28,7 @@ Hotea is thus somewhat similar yet quite different from:
 Class A: Approaches which hot-reload classes on your (already loaded) "main" primary classpath typically through a custom JVM Agent (with more or less limitations): 
 
 * http://hotswapagent.org
+* http://dcevm.github.io
 * https://github.com/spring-projects/spring-loaded
 * http://zeroturnaround.com/software/jrebel/
 * https://code.google.com/p/jreloader/
