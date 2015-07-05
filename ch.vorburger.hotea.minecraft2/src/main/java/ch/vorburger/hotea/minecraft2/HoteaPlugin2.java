@@ -43,8 +43,7 @@ public class HoteaPlugin2 implements Listener {
 	// protected @Inject Injector injector;
 	protected @Inject Game game;
 	private @Inject VanillaPluginManager pluginManager;
-	private @Inject EventManager eventManager;
-	private @Inject SinglePluginEventManager singlePluginEventManager;
+	private @Inject EventManager eventManager; // TODO once Sponge allows extensible Guice configuration: private @Inject SinglePluginEventManager singlePluginEventManager;
 	
 	private HotClassLoader hcl;
 	private Set<PluginContainer> pluginContainers;
@@ -89,6 +88,8 @@ public class HoteaPlugin2 implements Listener {
 		}
 	}
 
+	// TODO Once Sponge allows extensible Guice configuration, put following methods into a VanillaPluginManager subclass (and correctly Guice register it)
+	
 	private void registerPlugin(VanillaPluginContainer container) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Method method = pluginManager.getClass().getDeclaredMethod("registerPlugin", PluginContainer.class);
 		method.setAccessible(true);
@@ -143,11 +144,12 @@ public class HoteaPlugin2 implements Listener {
 	}
 
 	private void callStartedLifecycleEvents(PluginContainer plugin) {
-		singlePluginEventManager.post(plugin, SpongeEventFactory.createState(ServerStartingEvent.class, game));
+		// TODO This cannot work like this, yet... ;-(
+		// singlePluginEventManager.post(plugin, SpongeEventFactory.createState(ServerStartingEvent.class, game));
 	}
 
 	private void callStopingLifecycleEvents(PluginContainer plugin) {
-		singlePluginEventManager.post(plugin, SpongeEventFactory.createState(ServerStoppingEvent.class, game));
+		// singlePluginEventManager.post(plugin, SpongeEventFactory.createState(ServerStoppingEvent.class, game));
 	}
 
 }

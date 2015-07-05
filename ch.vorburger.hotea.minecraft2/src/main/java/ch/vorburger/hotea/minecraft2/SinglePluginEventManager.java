@@ -20,7 +20,9 @@ public class SinglePluginEventManager extends SpongeEventManager {
 
 	public boolean post(PluginContainer plugin, Event event) {
         List<RegisteredHandler<?>> handlers = getHandlerCache(event).getHandlers();
+System.out.println(handlers);
 		List<RegisteredHandler<?>> filteredHandlers = handlers.stream().filter(h -> h.getPlugin().equals(plugin)).collect(Collectors.toList());
+System.out.println(filteredHandlers);
 		return post(event, filteredHandlers);		
 	}
 
