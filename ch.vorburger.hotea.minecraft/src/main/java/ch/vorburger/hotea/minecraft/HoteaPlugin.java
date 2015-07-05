@@ -19,6 +19,9 @@ import ch.vorburger.hotea.HotClassLoader;
 import ch.vorburger.hotea.HotClassLoader.Listener;
 import ch.vorburger.hotea.HotClassLoaderBuilder;
 
+/**
+ * See https://github.com/SpongePowered/SpongeVanilla/pull/178. 
+ */
 @Plugin(id = "ch.vorburger.hotea.minecraft.HoteaPlugin", name = "Java HOT Reload Plug-In", version = "1.0.0-SNAPSHOT")
 public class HoteaPlugin implements Listener {
 
