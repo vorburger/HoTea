@@ -23,11 +23,15 @@ import org.spongepowered.common.Sponge;
 import org.spongepowered.vanilla.plugin.VanillaPluginContainer;
 import org.spongepowered.vanilla.plugin.VanillaPluginManager;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 import ch.vorburger.hotea.HotClassLoader;
 import ch.vorburger.hotea.HotClassLoader.Listener;
 import ch.vorburger.hotea.HotClassLoaderBuilder;
+import ch.vorburger.hotea.minecraft.api.PluginEvent;
+import ch.vorburger.hotea.minecraft.api.PluginLoadedEvent;
+import ch.vorburger.hotea.minecraft.api.PluginUnloadingEvent;
 
 /**
  * HOT reloading other plug-ins.
@@ -43,7 +47,7 @@ public class HoteaPlugin2 implements Listener {
 	// protected @Inject Injector injector;
 	protected @Inject Game game;
 	private @Inject VanillaPluginManager pluginManager;
-	private @Inject EventManager eventManager; // TODO once Sponge allows extensible Guice configuration: private @Inject SinglePluginEventManager singlePluginEventManager;
+	private @Inject EventManager eventManager;
 	
 	private HotClassLoader hcl;
 	private Set<PluginContainer> pluginContainers;
@@ -120,8 +124,8 @@ public class HoteaPlugin2 implements Listener {
 		if (pluginContainers == null)
 			return;
 		for (PluginContainer container : pluginContainers) {
-            unloadPlugin(container);
             callStopingLifecycleEvents(container);
+            unloadPlugin(container);
             logger.info("HOT Unloaded plugin: {} {}", container.getName(), container.getVersion());
 		}
 		pluginContainers = null;
@@ -143,13 +147,18 @@ public class HoteaPlugin2 implements Listener {
         }
 	}
 
-	private void callStartedLifecycleEvents(PluginContainer plugin) {
-		// TODO This cannot work like this, yet... ;-(
-		// singlePluginEventManager.post(plugin, SpongeEventFactory.createState(ServerStartingEvent.class, game));
+	private void callStartedLifecycleEvents(PluginContainer pluginContainer) {
+		eventManager.post(createPluginEvent(PluginLoadedEvent.class, game, pluginContainer));
 	}
 
-	private void callStopingLifecycleEvents(PluginContainer plugin) {
-		// singlePluginEventManager.post(plugin, SpongeEventFactory.createState(ServerStoppingEvent.class, game));
+	private void callStopingLifecycleEvents(PluginContainer pluginContainer) {
+		eventManager.post(createPluginEvent(PluginUnloadingEvent.class, game, pluginContainer));
 	}
 
+	private <T extends PluginEvent> T createPluginEvent(Class<T> type, Game game, PluginContainer pluginContainer) {
+		Map<String, Object> values = Maps.newHashMapWithExpectedSize(2);
+        values.put("game", game);
+		values.put("pluginContainer", pluginContainer);
+		return SpongeEventFactory.createEvent(type, values);
+	}
 }
