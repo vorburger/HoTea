@@ -40,7 +40,7 @@ import ch.vorburger.hotea.minecraft.api.PluginUnloadingEvent;
  *  
  * @author Michael Vorburger
  */
-@Plugin(id = "ch.vorburger.hotea.minecraft.HoteaPlugin", name = "Java HOT Reload Plug-In", version = "1.0.0-SNAPSHOT")
+@Plugin(id = "HoTea", name = "Java HOT Reload Plug-In", version = "1.0.0-SNAPSHOT")
 public class HoteaPlugin2 implements Listener {
 	
 	private @Inject Logger logger;
