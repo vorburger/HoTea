@@ -15,13 +15,13 @@ public abstract class AbstractHotPlugin {
 	// Hotea lifecycle
 
 	@Subscribe
-	public void onPluginLoaded(PluginLoadedEvent event) {
+	public final void onPluginLoaded(PluginLoadedEvent event) {
 		if (event.getPluginContainer().getInstance() == this)
 			onLoaded(event);
 	}
 	
 	@Subscribe
-	public void onPlugUnloading(PluginUnloadingEvent event) {
+	public final void onPlugUnloading(PluginUnloadingEvent event) {
 		if (event.getPluginContainer().getInstance() == this)
 			onStop(event);
 	}
@@ -30,12 +30,12 @@ public abstract class AbstractHotPlugin {
 	// Regular Sponge lifecycle
 
 	@Subscribe
-	public void onServerStarting(ServerStartingEvent event) {
+	public final void onServerStarting(ServerStartingEvent event) {
 		onLoaded(event);
 	}
 
 	@Subscribe
-	public void onServerStopping(ServerStoppingEvent event) {
+	public final void onServerStopping(ServerStoppingEvent event) {
 		onStop(event);
 	}
 
