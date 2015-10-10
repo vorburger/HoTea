@@ -1,9 +1,10 @@
 package ch.vorburger.hotea.minecraft.api;
 
 import org.spongepowered.api.event.GameEvent;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.state.ServerStartingEvent;
-import org.spongepowered.api.event.state.ServerStoppingEvent;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
+import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
+
+import com.google.common.eventbus.Subscribe;
 
 public abstract class AbstractHotPlugin {
 
@@ -30,12 +31,12 @@ public abstract class AbstractHotPlugin {
 	// Regular Sponge lifecycle
 
 	@Subscribe
-	public final void onServerStarting(ServerStartingEvent event) {
+	public final void onServerStarting(GameStartingServerEvent event) {
 		onLoaded(event);
 	}
 
 	@Subscribe
-	public final void onServerStopping(ServerStoppingEvent event) {
+	public final void onServerStopping(GameStoppingServerEvent event) {
 		onStop(event);
 	}
 

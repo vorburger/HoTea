@@ -12,10 +12,9 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.event.SpongeEventFactory;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.state.ServerStartingEvent;
-import org.spongepowered.api.event.state.ServerStoppingEvent;
+import org.spongepowered.api.event.SpongeEventFactoryUtils;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
+import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.service.event.EventManager;
@@ -24,6 +23,7 @@ import org.spongepowered.vanilla.plugin.VanillaPluginContainer;
 import org.spongepowered.vanilla.plugin.VanillaPluginManager;
 
 import com.google.common.collect.Maps;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import ch.vorburger.hotea.HotClassLoader;
@@ -57,7 +57,7 @@ public class HoteaPlugin2 implements Listener {
 	//   /plugin unregister <name>
 	
 	@Subscribe
-	public void onServerStarting(ServerStartingEvent event) {
+	public void onServerStarting(GameStartingServerEvent event) {
 		File dir = new File("/home/vorburger/dev/Minecraft/SwissKnightMinecraft/SpongePowered/MyFirstSpongePlugIn/bin");
 		try {
 			ClassLoader parentClassLoader = Plugin.class.getClassLoader();
@@ -82,7 +82,7 @@ public class HoteaPlugin2 implements Listener {
 	            VanillaPluginContainer container = new VanillaPluginContainer(pluginClass);
 	            registerPlugin(container);	
 	            Object plugin = container.getInstance();
-				eventManager.register(container, plugin);
+				eventManager.registerListeners(container, plugin);
 				callStartedLifecycleEvents(container);
 				pluginContainers.add(container);
 	            logger.info("HOT Loaded plugin: {} {} (from {})", container.getName(), container.getVersion(), source);
@@ -114,7 +114,7 @@ public class HoteaPlugin2 implements Listener {
 	}
 	
 	@Subscribe
-	public void onServerStopping(ServerStoppingEvent event) {
+	public void onServerStopping(GameStoppingServerEvent event) {
 		// Not needed, as normal notification flow will already do this, as the plugin is "normally" registered:
 		// unloadPlugins();
 		hcl.close();
@@ -138,8 +138,8 @@ public class HoteaPlugin2 implements Listener {
     	}
         try {
 			unregisterPlugin(container);
-			eventManager.unregister(container.getInstance());
-			eventManager.unregisterPlugin(container);
+			eventManager.unregisterListeners(container.getInstance());
+			eventManager.unregisterPluginListeners(container);
 			return true;
         } catch (Throwable e) {
         	logger.error("HOT Failed to load unplugin: {}", container.getId(), e);
@@ -159,6 +159,6 @@ public class HoteaPlugin2 implements Listener {
 		Map<String, Object> values = Maps.newHashMapWithExpectedSize(2);
         values.put("game", game);
 		values.put("pluginContainer", pluginContainer);
-		return SpongeEventFactory.createEvent(type, values);
+		return SpongeEventFactoryUtils.createEventImpl(type, values);
 	}
 }
