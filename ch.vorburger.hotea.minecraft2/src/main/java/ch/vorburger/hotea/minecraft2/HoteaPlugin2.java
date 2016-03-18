@@ -50,7 +50,7 @@ public class HoteaPlugin2 implements ch.vorburger.hotea.HotClassLoader.Listener 
 	private HotClassLoader hcl;
 	private Set<PluginContainer> pluginContainers;
 
-	// TODO remove v0.0.1 hard-coding below, and instead add commands such as:
+	// TODO remove v0.0.1 hard-coding below, and instead either add commands such as below, or (better?) configuration file, and public Service API:
 	// 	 /plugin register <directory>
 	//   /plugin unregister <name>
 
@@ -59,7 +59,12 @@ public class HoteaPlugin2 implements ch.vorburger.hotea.HotClassLoader.Listener 
 		File dir = new File("/home/vorburger/dev/Minecraft/SwissKnightMinecraft/SpongePowered/MyFirstSpongePlugIn/bin");
 		try {
 			ClassLoader parentClassLoader = Plugin.class.getClassLoader();
-			hcl = new HotClassLoaderBuilder().setParentClassLoader(parentClassLoader).addClasspathEntry(dir).addListener(this).build();
+			hcl = new HotClassLoaderBuilder().setParentClassLoader(parentClassLoader)
+					.addClasspathEntry(dir)
+					.addClasspathEntry("/home/vorburger/.gradle/caches/modules-2/files-2.1/org.eclipse.xtend/org.eclipse.xtend.lib.macro/2.9.0/7f8080053283efec4e6af4eb92a7f496430696c4/org.eclipse.xtend.lib.macro-2.9.0.jar")
+					.addClasspathEntry("/home/vorburger/.gradle/caches/modules-2/files-2.1/org.eclipse.xtend/org.eclipse.xtend.lib/2.9.0/8d462b90999f1820405f7a549d08917b95d663c6/org.eclipse.xtend.lib-2.9.0.jar")
+					.addClasspathEntry("/home/vorburger/.gradle/caches/modules-2/files-2.1/org.eclipse.xtext/org.eclipse.xtext.xbase.lib/2.9.0/d58aae519ab9e235c45ea0e76aac38f6088de400/org.eclipse.xtext.xbase.lib-2.9.0.jar")
+					.addListener(this).build();
 		} catch (Exception e) {
 			logger.error("HotClassLoaderBuilder failed", e);
 		}

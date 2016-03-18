@@ -28,9 +28,6 @@ class HotClassLoaderImpl implements HotClassLoader {
 	private URLClassLoader currentClassLoader;
 
 	protected HotClassLoaderImpl(List<Path> classpathEntries, ClassLoader parentClassLoader, List<HotClassLoader.Listener> listeners, ExceptionHandler exceptionHandler) throws IOException {
-		if (classpathEntries.isEmpty())
-			throw new IllegalStateException("Needs add least one classpath entry added");
-
 		this.listeners = listeners;
 		this.exceptionHandler = exceptionHandler;
 		this.parentClassLoader = parentClassLoader;

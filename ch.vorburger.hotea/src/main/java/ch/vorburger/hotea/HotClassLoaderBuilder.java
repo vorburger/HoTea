@@ -23,12 +23,23 @@ public class HotClassLoaderBuilder {
 	protected HotClassLoader.ExceptionHandler exceptionHandler = new LoggingExceptionHandler();
 	protected ClassLoader parentClassLoader;
 	
-	public HotClassLoaderBuilder addClasspathEntry(File path) {
-		classpathEntries.add(path.toPath());
-		return this;
+	public HotClassLoaderBuilder addClasspathEntry(File file) {
+		return addClasspathEntry(file.toPath());
+	}
+	
+	public HotClassLoaderBuilder addClasspathEntry(String pathName) {
+		return addClasspathEntry(new File(pathName));
 	}
 
 	public HotClassLoaderBuilder addClasspathEntry(Path path) {
+		File file = path.toFile();
+		if (!file.exists())
+			throw new IllegalArgumentException("Does not exist: " + path.toString());
+		if (!file.canRead())
+			throw new IllegalArgumentException("Cannot not read: " + path.toString());
+		if (!file.isFile() && !file.isDirectory())
+			throw new IllegalArgumentException("Is neither a directory nor a file: " + path.toString());
+
 		classpathEntries.add(path);
 		return this;
 	}
@@ -58,6 +69,8 @@ public class HotClassLoaderBuilder {
 	 * @throws IOException if there was an IO related problem with accessing one of the classpath entry files/directories etc.  
 	 */
 	public HotClassLoader build() throws IllegalStateException, IllegalArgumentException, IOException {
+		if (classpathEntries.isEmpty())
+			throw new IllegalStateException("Needs add least one classpath entry added");
 		return new HotClassLoaderImpl(classpathEntries, parentClassLoader, listeners, exceptionHandler);
 	}
 
