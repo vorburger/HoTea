@@ -12,15 +12,14 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.SpongeEventFactoryUtils;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.service.event.EventManager;
-import org.spongepowered.common.Sponge;
-import org.spongepowered.vanilla.plugin.VanillaPluginContainer;
-import org.spongepowered.vanilla.plugin.VanillaPluginManager;
+import org.spongepowered.server.plugin.VanillaPluginContainer;
+import org.spongepowered.server.plugin.VanillaPluginManager;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -136,7 +135,7 @@ public class HoteaPlugin2 implements ch.vorburger.hotea.HotClassLoader.Listener 
 
 	private boolean unloadPlugin(PluginContainer container) {
 		if (!pluginManager.isLoaded(container.getId())) {
-			Sponge.getLogger().error("HOT Failed to unload plugin, as it wasn't loaded: {}", container);
+			logger.error("HOT Failed to unload plugin, as it wasn't loaded: {}", container);
 			return false;
 		}
 		try {

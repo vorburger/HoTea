@@ -1,28 +1,36 @@
 package ch.vorburger.hotea.minecraft.api;
 
-import org.spongepowered.api.event.GameEvent;
+import java.util.Optional;
+
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
+import org.spongepowered.api.event.game.state.GameStateEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 
 public abstract class AbstractHotPlugin {
 
-	abstract protected void onLoaded(GameEvent event);
+	abstract protected void onLoaded(GameStateEvent event);
 
-	abstract protected void onStop(GameEvent event);
+	abstract protected void onStop(GameStateEvent event);
 
 
 	// Hotea lifecycle
 
 	@Listener
 	public final void onPluginLoaded(PluginLoadedEvent event) {
-		if (event.getPluginContainer().getInstance() == this)
+		Optional<?> plugin = event.getPluginContainer().getInstance();
+		if (!plugin.isPresent())
+			return;
+		if (plugin.get() == this)
 			onLoaded(event);
 	}
 
 	@Listener
 	public final void onPlugUnloading(PluginUnloadingEvent event) {
-		if (event.getPluginContainer().getInstance() == this)
+		Optional<?> plugin = event.getPluginContainer().getInstance();
+		if (!plugin.isPresent())
+			return;
+		if (plugin.get() == this)
 			onStop(event);
 	}
 

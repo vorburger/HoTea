@@ -24,16 +24,6 @@
  */
 package ch.vorburger.hotea.minecraft2;
 
-import com.google.common.base.StandardSystemProperty;
-import com.google.common.collect.Sets;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.AnnotationNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spongepowered.api.plugin.Plugin;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -51,173 +41,185 @@ import java.util.zip.ZipFile;
 
 import javax.annotation.Nullable;
 
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.AnnotationNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spongepowered.api.plugin.Plugin;
+
+import com.google.common.base.StandardSystemProperty;
+import com.google.common.collect.Sets;
+
 /**
  * Copy/pasted from org.spongepowered.vanilla.plugin.PluginScanner.
  */
 final class PluginScanner {
 	private static final Logger logger = LoggerFactory.getLogger(PluginScanner.class);
-	
-    private static final String PLUGIN_DESCRIPTOR = Type.getDescriptor(Plugin.class);
 
-    private static final String JAVA_HOME = StandardSystemProperty.JAVA_HOME.value();
+	private static final String PLUGIN_DESCRIPTOR = Type.getDescriptor(Plugin.class);
 
-    private static final String CLASS_EXTENSION = ".class";
+	private static final String JAVA_HOME = StandardSystemProperty.JAVA_HOME.value();
 
-    private static final FileFilter CLASS_OR_DIRECTORY = new FileFilter() {
+	private static final String CLASS_EXTENSION = ".class";
 
-        @Override
-        public boolean accept(File file) {
-            return file.isDirectory() || file.getName().endsWith(CLASS_EXTENSION);
-        }
-    };
-    static final FilenameFilter ARCHIVE = new FilenameFilter() {
+	private static final FileFilter CLASS_OR_DIRECTORY = new FileFilter() {
 
-        @Override
-        public boolean accept(@Nullable File dir, String name) {
-            return name.endsWith(".jar") || name.endsWith(".zip");
-        }
-    };
+		@Override
+		public boolean accept(File file) {
+			return file.isDirectory() || file.getName().endsWith(CLASS_EXTENSION);
+		}
+	};
+	static final FilenameFilter ARCHIVE = new FilenameFilter() {
 
-    private PluginScanner() {
-    }
+		@Override
+		public boolean accept(@Nullable File dir, String name) {
+			return name.endsWith(".jar") || name.endsWith(".zip");
+		}
+	};
 
-    static Set<String> scanClassPath(URLClassLoader loader) {
-        Set<URI> sources = Sets.newHashSet();
-        Set<String> plugins = Sets.newHashSet();
+	private PluginScanner() {
+	}
 
-        for (URL url : loader.getURLs()) {
-            if (!url.getProtocol().equals("file")) {
-                logger.warn("Skipping unsupported classpath source: {}", url);
-                continue;
-            }
+	static Set<String> scanClassPath(URLClassLoader loader) {
+		Set<URI> sources = Sets.newHashSet();
+		Set<String> plugins = Sets.newHashSet();
 
-            if (url.getPath().startsWith(JAVA_HOME)) {
-                logger.trace("Skipping JRE classpath entry: {}", url);
-                continue;
-            }
+		for (URL url : loader.getURLs()) {
+			if (!url.getProtocol().equals("file")) {
+				logger.warn("Skipping unsupported classpath source: {}", url);
+				continue;
+			}
 
-            URI source;
-            try {
-                source = url.toURI();
-            } catch (URISyntaxException e) {
-                logger.error("Failed to search for classpath plugins in {}", url);
-                continue;
-            }
+			if (url.getPath().startsWith(JAVA_HOME)) {
+				logger.trace("Skipping JRE classpath entry: {}", url);
+				continue;
+			}
 
-            if (sources.add(source)) {
-                scanFile(new File(source), plugins);
-            }
-        }
+			URI source;
+			try {
+				source = url.toURI();
+			} catch (URISyntaxException e) {
+				logger.error("Failed to search for classpath plugins in {}", url);
+				continue;
+			}
 
-        logger.trace("Found {} plugin(s): {}", plugins.size(), plugins);
-        return plugins;
-    }
+			if (sources.add(source)) {
+				scanFile(new File(source), plugins);
+			}
+		}
 
-    private static Set<String> scanFile(File file) {
-        Set<String> plugins = Sets.newHashSet();
-        scanFile(file, plugins);
-        logger.trace("Found {} plugin(s): {}", plugins.size(), plugins);
-        return plugins;
-    }
+		logger.trace("Found {} plugin(s): {}", plugins.size(), plugins);
+		return plugins;
+	}
 
-    private static void scanFile(File file, Set<String> plugins) {
-        if (file.exists()) {
-            if (file.isDirectory()) {
-                scanDirectory(file, plugins);
-            } else {
-                scanZip(file, plugins);
-            }
-        }
-    }
+	//	private static Set<String> scanFile(File file) {
+	//		Set<String> plugins = Sets.newHashSet();
+	//		scanFile(file, plugins);
+	//		logger.trace("Found {} plugin(s): {}", plugins.size(), plugins);
+	//		return plugins;
+	//	}
 
-    private static void scanDirectory(File dir, final Set<String> plugins) {
-        logger.trace("Scanning {} for plugins", dir);
+	private static void scanFile(File file, Set<String> plugins) {
+		if (file.exists()) {
+			if (file.isDirectory()) {
+				scanDirectory(file, plugins);
+			} else {
+				scanZip(file, plugins);
+			}
+		}
+	}
 
-        try {
-            scanDirectory0(dir, plugins);
-        } catch (IOException e) {
-            logger.error("Failed to search for plugins in {}", dir, e);
-        }
-    }
+	private static void scanDirectory(File dir, final Set<String> plugins) {
+		logger.trace("Scanning {} for plugins", dir);
 
-    private static void scanDirectory0(File dir, Set<String> plugins) throws IOException {
-        for (File file : dir.listFiles(CLASS_OR_DIRECTORY)) {
-            if (file.isDirectory()) {
-                // Recurse into subdirectory
-                scanDirectory0(file, plugins);
-            } else {
-                // This is a class file
-                InputStream in = new FileInputStream(file);
-                try {
-                    String plugin = findPlugin(in);
-                    if (plugin != null) {
-                        plugins.add(plugin);
-                    }
-                } finally {
-                    in.close();
-                }
-            }
-        }
-    }
+		try {
+			scanDirectory0(dir, plugins);
+		} catch (IOException e) {
+			logger.error("Failed to search for plugins in {}", dir, e);
+		}
+	}
 
-    static Set<String> scanZip(File file) {
-        Set<String> plugins = Sets.newHashSet();
-        scanZip(file, plugins);
-        logger.trace("Found {} plugin(s): {}", plugins.size(), plugins);
-        return plugins;
-    }
+	private static void scanDirectory0(File dir, Set<String> plugins) throws IOException {
+		for (File file : dir.listFiles(CLASS_OR_DIRECTORY)) {
+			if (file.isDirectory()) {
+				// Recurse into subdirectory
+				scanDirectory0(file, plugins);
+			} else {
+				// This is a class file
+				InputStream in = new FileInputStream(file);
+				try {
+					String plugin = findPlugin(in);
+					if (plugin != null) {
+						plugins.add(plugin);
+					}
+				} finally {
+					in.close();
+				}
+			}
+		}
+	}
 
-    private static void scanZip(File file, Set<String> plugins) {
-        logger.trace("Scanning {} for plugins", file);
+	static Set<String> scanZip(File file) {
+		Set<String> plugins = Sets.newHashSet();
+		scanZip(file, plugins);
+		logger.trace("Found {} plugin(s): {}", plugins.size(), plugins);
+		return plugins;
+	}
 
-        if (!ARCHIVE.accept(null, file.getName())) {
-            return;
-        }
+	private static void scanZip(File file, Set<String> plugins) {
+		logger.trace("Scanning {} for plugins", file);
 
-        // Open the zip file so we can scan for plugins
-        try {
-            ZipFile zip = new ZipFile(file);
-            try {
-                Enumeration<? extends ZipEntry> entries = zip.entries();
-                while (entries.hasMoreElements()) {
-                    ZipEntry entry = entries.nextElement();
-                    if (entry.isDirectory() || !entry.getName().endsWith(CLASS_EXTENSION)) {
-                        continue;
-                    }
+		if (!ARCHIVE.accept(null, file.getName())) {
+			return;
+		}
 
-                    InputStream in = zip.getInputStream(entry);
-                    try {
-                        String plugin = findPlugin(in);
-                        if (plugin != null) {
-                            plugins.add(plugin);
-                        }
-                    } finally {
-                        in.close();
-                    }
-                }
-            } finally {
-                zip.close();
-            }
-        } catch (IOException e) {
-            logger.error("Failed to load plugin JAR: {}", file, e);
-        }
-    }
+		// Open the zip file so we can scan for plugins
+		try {
+			ZipFile zip = new ZipFile(file);
+			try {
+				Enumeration<? extends ZipEntry> entries = zip.entries();
+				while (entries.hasMoreElements()) {
+					ZipEntry entry = entries.nextElement();
+					if (entry.isDirectory() || !entry.getName().endsWith(CLASS_EXTENSION)) {
+						continue;
+					}
 
-    @Nullable
-    private static String findPlugin(InputStream in) throws IOException {
-        ClassReader reader = new ClassReader(in);
-        ClassNode classNode = new ClassNode();
-        reader.accept(classNode, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+					InputStream in = zip.getInputStream(entry);
+					try {
+						String plugin = findPlugin(in);
+						if (plugin != null) {
+							plugins.add(plugin);
+						}
+					} finally {
+						in.close();
+					}
+				}
+			} finally {
+				zip.close();
+			}
+		} catch (IOException e) {
+			logger.error("Failed to load plugin JAR: {}", file, e);
+		}
+	}
 
-        if (classNode.visibleAnnotations != null) {
-            for (AnnotationNode node : classNode.visibleAnnotations) {
-                if (node.desc.equals(PLUGIN_DESCRIPTOR)) {
-                    return classNode.name.replace('/', '.');
-                }
-            }
-        }
+	@Nullable
+	private static String findPlugin(InputStream in) throws IOException {
+		ClassReader reader = new ClassReader(in);
+		ClassNode classNode = new ClassNode();
+		reader.accept(classNode, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
 
-        return null;
-    }
+		if (classNode.visibleAnnotations != null) {
+			for (Object object : classNode.visibleAnnotations) {
+				AnnotationNode node = (AnnotationNode) object;
+				if (node.desc.equals(PLUGIN_DESCRIPTOR)) {
+					return classNode.name.replace('/', '.');
+				}
+			}
+		}
+
+		return null;
+	}
 
 }
