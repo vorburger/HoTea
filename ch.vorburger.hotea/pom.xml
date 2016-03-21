@@ -49,7 +49,10 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>${slf4j.version}</version>
-			<scope>test</scope>
+			<!-- This is scope provided instead of test just so that the DirectoryWatcherMain
+				has it on it's classpath; that useful for dev tests, and potentially customer
+				debugging. -->
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

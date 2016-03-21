@@ -87,7 +87,7 @@ class HotClassLoaderImpl implements HotClassLoader {
 	protected List<DirectoryWatcher> setUpFileChangeListeners(List<Path> classpathEntries) throws IOException {
 		ArrayList<DirectoryWatcher> newWatchers = new ArrayList<>(classpathEntries.size());
 		
-		DirectoryWatcher.Listener dirListener = (directory, changeKind) -> {
+		DirectoryWatcher.Listener dirListener = (path, changeKind) -> {
 			URLClassLoader oldClassLoader = currentClassLoader;
 			this.currentClassLoader = getNewClassLoader();
 			oldClassLoader.close();
@@ -103,7 +103,7 @@ class HotClassLoaderImpl implements HotClassLoader {
 			if (!filePath.toFile().isDirectory())
 				continue;
 			
-			newWatchers.add(new DirectoryWatcherBuilder().dir(filePath).listener(dirListener).exceptionHandler(exH).build());
+			newWatchers.add(new DirectoryWatcherBuilder().path(filePath).listener(dirListener).exceptionHandler(exH).build());
 		}
 		newWatchers.trimToSize();
 		return newWatchers;

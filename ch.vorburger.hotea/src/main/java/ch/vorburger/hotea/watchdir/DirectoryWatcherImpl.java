@@ -38,8 +38,7 @@ class DirectoryWatcherImpl implements DirectoryWatcher {
 	protected final WatchService watcher = FileSystems.getDefault().newWatchService(); // better final, as it will be accessed by both threads (normally OK either way, but still)
 	protected final Thread thread;
 
-	/** Clients should use DirectoryWatcher.create() 
-	 * @param exceptionHandler */
+	/** Clients should use DirectoryWatcherBuilder */
 	protected DirectoryWatcherImpl(final Path watchBasePath, final Listener listener, ExceptionHandler exceptionHandler) throws IOException {
 //		this.dir = dir;
 		this.listener = listener;

@@ -20,10 +20,10 @@ public interface DirectoryWatcher extends Closeable {
 	interface Listener {
 		/**
 		 * Listener for file change notifications.
-		 * @param directory changed directory. Note that even if a File is changed, we get a notification of its directory - not the File.
+		 * @param path Path to what caused the change. Note that when watching directory trees, we get a notification of one file (or new/deleted directory) causing it, not the registered root directory.
 		 * @throws Throwable if anything went wrong
 		 */
-		void onChange(Path directory, ChangeKind changeKind) throws Throwable;
+		void onChange(Path path, ChangeKind changeKind) throws Throwable;
 	}
 
 	interface ExceptionHandler {

@@ -15,28 +15,72 @@ import java.io.File;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.vorburger.hotea.tests.util.AssertableExceptionHandler;
-import ch.vorburger.hotea.watchdir.DirectoryWatcher;
-import ch.vorburger.hotea.watchdir.DirectoryWatcherBuilder;
-
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
+import ch.vorburger.hotea.tests.util.AssertableExceptionHandler;
+import ch.vorburger.hotea.watchdir.DirectoryWatcher;
+import ch.vorburger.hotea.watchdir.DirectoryWatcherBuilder;
+import ch.vorburger.hotea.watchdir.FileWatcherBuilder;
+
 /**
- * Tests for DirectoryWatcher.
- * 
+ * Tests for {@link DirectoryWatcherBuilder} and @link FileWatcherBuilder}.
+ *
  * @author Michael Vorburger
  */
-public class DirectoryWatcherTest {
+public class DirectoryAndFileWatcherTest {
 
 	AssertableExceptionHandler assertableExceptionHandler = new AssertableExceptionHandler();
-	boolean changed = false;
-	
+	volatile boolean changed;
+
 	@BeforeClass
 	static public void configureSlf4jSimpleShowAllLogs() {
 		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
 	}
-	
+
+	@Test
+	public void testFileWatcher() throws Throwable {
+		final File dir = new File("target/tests/FileWatcherTest/");
+		dir.mkdirs();
+		File file = new File(dir, "yo.txt");
+		Files.write("yo", file, Charsets.US_ASCII);
+
+		try (DirectoryWatcher dw = new FileWatcherBuilder()
+				.path(file).listener((p, c) -> {
+						assertFalse(changed); // We want this to only be called once
+						changed = true;
+					}).exceptionHandler(assertableExceptionHandler).build()) {
+
+			changed = false;
+			Files.write("ho", file, Charsets.US_ASCII);
+			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
+			await().atMost(1, SECONDS).until(() -> changed, is(true));
+			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
+
+			changed = false;
+			Files.write("do", file, Charsets.US_ASCII);
+			await().atMost(1, SECONDS).until(() -> changed, is(true));
+			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
+
+			changed = false;
+			file.delete();
+			await().atMost(1, SECONDS).until(() -> changed, is(true));
+			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
+
+			changed = false;
+			Files.write("yo", file, Charsets.US_ASCII);
+			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
+			await().atMost(1, SECONDS).until(() -> changed, is(true));
+			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
+
+			changed = false;
+			File anotherFile = new File(dir, "another.txt");
+			Files.write("another", anotherFile, Charsets.US_ASCII);
+			await().atMost(1, SECONDS).until(() -> changed, is(false));
+			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
+		}
+	}
+
 	@Test
 	public void testDirectoryWatcher() throws Throwable {
 		final File dir = new File("target/tests/DirectoryWatcherTest/some/sub/directory");
@@ -45,21 +89,22 @@ public class DirectoryWatcherTest {
 		File newFile = new File(subDir, "yo.txt");
 		newFile.delete();
 		subDir.delete();
-		
+
 		try (DirectoryWatcher dw = new DirectoryWatcherBuilder()
-				.dir(dir.getParentFile().getParentFile()).listener((p, c) -> {
+				.path(dir.getParentFile().getParentFile()).listener((p, c) -> {
 						assertFalse(changed); // We want this to only be called once
 						changed = true;
 					}).exceptionHandler(assertableExceptionHandler).build()) {
 
 			// Note we're creating another new sub-directory (because we want to
 			// test that not only existing but also new directories are scanned)
+			changed = false;
 			assertTrue(subDir.mkdirs());
 			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
 
+			changed = false;
 			Files.write("yo", newFile, Charsets.US_ASCII);
 			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
-
 			await().
 				// conditionEvaluationListener(new ConditionEvaluationLogger()).
 				atMost(1, SECONDS).until(() -> changed, is(true));
@@ -83,13 +128,14 @@ public class DirectoryWatcherTest {
 		testFile.delete();
 		final File dir = testFile.getParentFile();
 		dir.mkdirs();
-		try (DirectoryWatcher dw = new DirectoryWatcherBuilder().dir(dir)
+		try (DirectoryWatcher dw = new DirectoryWatcherBuilder().path(dir)
 				.listener((p, c) -> {
 					fail("duh!");
 				}).exceptionHandler(assertableExceptionHandler).build()) {
-			
+
 			Files.write("yo", testFile, Charsets.US_ASCII);
 			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
 		}
 	}
+
 }

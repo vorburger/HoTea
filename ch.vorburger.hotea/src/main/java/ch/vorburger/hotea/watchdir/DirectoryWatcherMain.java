@@ -18,20 +18,21 @@ import ch.vorburger.hotea.watchdir.DirectoryWatcher.Listener;
  */
 public class DirectoryWatcherMain {
 
-	public static void main(String[] args) throws IOException,
-			InterruptedException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		if (args.length < 1) {
 			System.err.println("USAGE: <root-directory-to-watch-for-changes>");
 			return;
 		}
 
+		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
+
 		File dir = new File(args[0]);
-		DirectoryWatcherImpl dw = (DirectoryWatcherImpl) new DirectoryWatcherBuilder().dir(dir)
+		DirectoryWatcherImpl dw = (DirectoryWatcherImpl) new DirectoryWatcherBuilder().path(dir)
 				// Using explicit anonymous inner classes instead of Lambdas for clarity to readers
 				.listener(new Listener() {
 					@Override
-					public void onChange(Path directory, ChangeKind changeKind) throws Throwable {
-						System.out.println(changeKind.toString() + " " + directory.toString());
+					public void onChange(Path path, ChangeKind changeKind) throws Throwable {
+						System.out.println(changeKind.toString() + " " + path.toString());
 					}
 
 				}).exceptionHandler(new ExceptionHandler() {
