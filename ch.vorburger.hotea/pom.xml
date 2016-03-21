@@ -5,7 +5,6 @@
 	<groupId>ch.vorburger</groupId>
 	<artifactId>hotea</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>ch.vorburger.jreloader</name>
 
 	<build>
 		<finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
@@ -24,14 +23,27 @@
 	</build>
 
 	<properties>
-		<slf4j.version>1.7.12</slf4j.version>
+		<slf4j.version>1.7.19</slf4j.version>
 	</properties>
 
 	<dependencies>
+
+	   <!-- Please keep dependencies of this library minimal.
+	        This helps with avoiding funky ClassLoader issues in applications using it.
+	    -->
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
+			<!-- This is intentionally scope provided, so that the application using
+				Hotea can provide their version, instead of dragging on ours. Normally this
+				would work OK thanks to Maven, but when using this library (Hotea) in an
+				application built with Gradle and using (johnrengelman) shadow, it's
+				safer to make extra sure that our version of slf4j does not get
+				included by mistake in shaded JAR; this will prevent ClassLoader
+				surprises in the using application due to different slf4j. -->
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>

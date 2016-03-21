@@ -39,6 +39,13 @@ public class URLClassLoaderWithBetterMessage extends URLClassLoader {
 			if (e.getCause() != null)
 				newClassNotFoundException.initCause(e.getCause());
 			throw newClassNotFoundException;
+		} catch (LinkageError e) {
+			String originalMessage = e.getMessage();
+			String newMessage = originalMessage + getAllMyURLs();
+			LinkageError newLinkageError = new LinkageError(newMessage);
+			if (e.getCause() != null)
+				newLinkageError.initCause(e.getCause());
+			throw newLinkageError;
 		}
 	}
 
