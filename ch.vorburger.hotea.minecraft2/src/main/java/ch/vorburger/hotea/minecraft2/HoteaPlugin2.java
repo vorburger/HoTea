@@ -33,11 +33,13 @@ import ch.vorburger.hotea.minecraft.api.PluginUnloadingEvent;
 /**
  * HOT reloading other plug-ins.
  *
- * Not an ideal implementation, would be better to have this in the core platform, but see https://github.com/SpongePowered/SpongeVanilla/pull/178.
+ * It would ideally be better to have this in the core platform, but see https://github.com/SpongePowered/SpongeVanilla/pull/178.
+ *
+ * To compile this you would need (a rebased adapted version of https://github.com/vorburger/SpongeVanilla/commits/Hotea).
  *
  * @author Michael Vorburger
  */
-@Plugin(id = "HoTea", name = "Java HOT Reload Plug-In", version = "1.0.0-SNAPSHOT")
+@Plugin(id = "ch.vorburger.hotea2", name = "HOT Reload Plug-In (requires patched VanillaPluginContainer)", description = "Loads and reloads other plugins on changes; useful for development", version = "2.0.0-SNAPSHOT", authors = "Michael Vorburger.ch")
 public class HoteaPlugin2 implements ch.vorburger.hotea.HotClassLoader.Listener {
 
 	private @Inject Logger logger;
@@ -81,7 +83,9 @@ public class HoteaPlugin2 implements ch.vorburger.hotea.HotClassLoader.Listener 
 			try {
 				Class<?> pluginClass = newClassLoader.loadClass(pluginClassName);
 				// Object plugin = injector.getInstance(pluginClass);
-				VanillaPluginContainer container = new VanillaPluginContainer(pluginClass);
+				VanillaPluginContainer container = new VanillaPluginContainer(pluginClassName, pluginClass,
+						pluginClassName, pluginClassName, pluginClassName, pluginClassName, null, pluginClassName,
+						null);
 				registerPlugin(container);
 				Object plugin = container.getInstance();
 				eventManager.registerListeners(container, plugin);
