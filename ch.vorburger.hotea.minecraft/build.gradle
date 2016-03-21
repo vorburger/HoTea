@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+    id 'maven'
+    id 'eclipse'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+
+group = 'ch.vorburger.hotea.minecraft'
+version = '1.0.0-SNAPSHOT'
+// description = """"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+     mavenLocal()
+     maven { url "http://repo.spongepowered.org/maven" }
+     jcenter()
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+dependencies {
+    compileOnly 'org.spongepowered:spongeapi:4.1.0-SNAPSHOT'
+    compileOnly 'ch.vorburger.hotea.minecraft:HotPluginManager-API:1.0.0'
+
+    compile 'ch.vorburger:hotea:1.0.0-SNAPSHOT'
+
+    testCompile 'junit:junit:4.+'
+    testCompile 'org.spongepowered:spongeapi:4.1.0-SNAPSHOT'
+}
