@@ -1,6 +1,8 @@
 Hot Chai (tea) with Java coffee (ch.vorburger.hotea)
 ====
 
+The Minecraft specific part is in the [minecraft/ module](ch.vorburger.hotea.minecraft). What follows here is a general library (not Minecraft related, but the Minecraft module uses this).
+
 Hotea is a "kept it simple and stupid" (KISS) Java Mod-ules/Plug-In mini framework with HOT Class reloading to "support dynamic script like source code" (through isolated ClassLoader/s).  This may be of interest and useful to you to build things ranging from e.g. plugins for game engines to perhaps some sort of runtime changeable coded out "business rule" stuff.
 
 Watch https://www.youtube.com/watch?v=oMhY075hx9k and see e.g. the [HotSwingExampleMain](ch.vorburger.hotea/src/test/java/ch/vorburger/hotea/examples/swing/HotSwingExampleMain.java) or [the Tests](ch.vorburger.hotea/src/test/java/ch/vorburger/hotea/tests/) for an illustration.
