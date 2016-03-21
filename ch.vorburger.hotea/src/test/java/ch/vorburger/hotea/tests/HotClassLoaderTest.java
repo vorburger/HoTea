@@ -102,7 +102,7 @@ public class HotClassLoaderTest {
 	}
 
 	@Test public void testHotClassLoaderBuilderListenerFailure() throws Throwable {
-		try (HotClassLoader hcl = new HotClassLoaderBuilder().addClasspathEntry(new File("tada")).addListener(newClassLoader -> {
+		try (HotClassLoader hcl = new HotClassLoaderBuilder().addClasspathEntry(new File(".")).addListener(newClassLoader -> {
 			fail("duh!");
 		}).setListenerExceptionHandler(assertableExceptionHandler).build()) {
 			assertableExceptionHandler.assertErrorMessageCaughtFromTheBackgroundThreadContains("duh!");
@@ -110,14 +110,14 @@ public class HotClassLoaderTest {
 	}
 	
 	@Test public void testExceptionMessageContainsPath() throws Exception {
-		try (HotClassLoader hcl = new HotClassLoaderBuilder().addClasspathEntry(new File("ilyenapas")).build()) {
+		try (HotClassLoader hcl = new HotClassLoaderBuilder().addClasspathEntry(new File(".")).build()) {
 			ClassLoader classLoader = hcl.getCurrentClassLoader();
 			try {
 				classLoader.loadClass("Class.that.does.not.exist");
 				fail("Should not have worked!");
 			} catch (ClassNotFoundException e) {
 				assertTrue(e.getMessage(), e.getMessage().contains("Class.that.does.not.exist"));
-				assertTrue(e.getMessage(), e.getMessage().contains("ilyenapas"));
+				assertTrue(e.getMessage(), e.getMessage().contains("."));
 			}
 		}
 	}
