@@ -1,7 +1,7 @@
 package ch.vorburger.hotea.minecraft.api;
 
 /**
- * Represents the {@link PluginState#UNLOADING} event.
+ * Represents the {@link HotPluginState#UNLOADING} event.
  */
 public interface PluginUnloadingEvent extends PluginEvent {
 }

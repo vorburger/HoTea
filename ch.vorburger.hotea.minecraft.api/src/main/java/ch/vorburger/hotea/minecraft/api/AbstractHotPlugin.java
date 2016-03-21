@@ -4,14 +4,13 @@ import java.util.Optional;
 
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
-import org.spongepowered.api.event.game.state.GameStateEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 
 public abstract class AbstractHotPlugin {
 
-	abstract protected void onLoaded(GameStateEvent event);
+	abstract protected void onLoaded();
 
-	abstract protected void onStop(GameStateEvent event);
+	abstract protected void onStop();
 
 
 	// Hotea lifecycle
@@ -22,7 +21,7 @@ public abstract class AbstractHotPlugin {
 		if (!plugin.isPresent())
 			return;
 		if (plugin.get() == this)
-			onLoaded(event);
+			onLoaded();
 	}
 
 	@Listener
@@ -31,7 +30,7 @@ public abstract class AbstractHotPlugin {
 		if (!plugin.isPresent())
 			return;
 		if (plugin.get() == this)
-			onStop(event);
+			onStop();
 	}
 
 
@@ -39,12 +38,12 @@ public abstract class AbstractHotPlugin {
 
 	@Listener
 	public final void onServerStarting(GameStartingServerEvent event) {
-		onLoaded(event);
+		onLoaded();
 	}
 
 	@Listener
 	public final void onServerStopping(GameStoppingServerEvent event) {
-		onStop(event);
+		onStop();
 	}
 
 }
