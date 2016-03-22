@@ -43,6 +43,7 @@ public class DirectoryAndFileWatcherTest {
 		assertableExceptionHandler = new AssertableExceptionHandler();
 		final File dir = new File("target/tests/FileWatcherTest/");
 		final File subDir = new File(dir.getParentFile(), "subDir");
+		dir.mkdirs();
 		subDir.mkdirs();
 		File file = new File(dir, "yo.txt");
 		Files.write("yo", file, Charsets.US_ASCII);
