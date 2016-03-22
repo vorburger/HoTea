@@ -49,11 +49,17 @@ public class DirectoryAndFileWatcherTest {
 		Files.write("yo", file, Charsets.US_ASCII);
 		Files.write("bo", new File(subDir, "bo.txt"), Charsets.US_ASCII);
 
+		changed = false;
 		try (DirectoryWatcher dw = new FileWatcherBuilder()
 				.path(file).listener((p, c) -> {
 						assertFalse(changed); // We want this to only be called once
 						changed = true;
 					}).exceptionHandler(assertableExceptionHandler).build()) {
+
+			// We want it to call the listener once for setup, even without any change
+			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
+			await().atMost(1, SECONDS).until(() -> changed, is(true));
+			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
 
 			changed = false;
 			Files.write("ho", file, Charsets.US_ASCII);
@@ -95,11 +101,17 @@ public class DirectoryAndFileWatcherTest {
 		newFile.delete();
 		subDir.delete();
 
+		changed = false;
 		try (DirectoryWatcher dw = new DirectoryWatcherBuilder()
 				.path(dir.getParentFile().getParentFile()).listener((p, c) -> {
 						assertFalse(changed); // We want this to only be called once
 						changed = true;
 					}).exceptionHandler(assertableExceptionHandler).build()) {
+
+			// We want it to call the listener once for setup, even without any change
+			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
+			await().atMost(1, SECONDS).until(() -> changed, is(true));
+			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
 
 			// Note we're creating another new sub-directory (because we want to
 			// test that not only existing but also new directories are scanned)

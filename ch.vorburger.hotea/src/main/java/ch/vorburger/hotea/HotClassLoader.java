@@ -4,6 +4,7 @@
 package ch.vorburger.hotea;
 
 import java.io.Closeable;
+import java.util.List;
 
 import ch.vorburger.hotea.watchdir.DirectoryWatcher;
 
@@ -21,6 +22,8 @@ public interface HotClassLoader extends Closeable {
 	 */
 	ClassLoader getCurrentClassLoader();
 
+	List<HotClassLoader.Listener> getListeners();
+	
 	interface Listener {
 
 		/**

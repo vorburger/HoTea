@@ -17,10 +17,14 @@ public class HoteaListener implements Listener {
 
 	@Override
 	public void onReload(ClassLoader newClassLoader) throws Throwable {
-		if (hotPlugins != null) {
-			pluginManager.unloadPlugins(hotPlugins);
-		}
+		unload();
 		hotPlugins = pluginManager.loadPlugins((URLClassLoader) newClassLoader);
 	}
 
+	void unload() {
+		if (hotPlugins != null) {
+			pluginManager.unloadPlugins(hotPlugins);
+		}
+	}
+	
 }

@@ -37,6 +37,7 @@ public class HotSpongePlugin {
 
 	@Listener
 	public void onPluginUnloading(GameStoppingServerEvent event) {
+		logger.info("I'm unloading.. :(");
 		if (commandMapping.isPresent()) {
 			game.getCommandManager().removeMapping(commandMapping.get());
 		}

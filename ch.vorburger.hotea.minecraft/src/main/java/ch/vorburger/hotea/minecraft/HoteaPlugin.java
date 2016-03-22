@@ -1,6 +1,7 @@
 package ch.vorburger.hotea.minecraft;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,9 @@ import ch.vorburger.hotea.HotClassLoader;
 import ch.vorburger.hotea.HotClassLoaderBuilder;
 import ch.vorburger.hotea.minecraft.Configuration.HotPluginsLocation;
 import ch.vorburger.hotea.minecraft.api.HotPluginManager;
+import ch.vorburger.hotea.watchdir.DirectoryWatcher;
+import ch.vorburger.hotea.watchdir.DirectoryWatcher.ChangeKind;
+import ch.vorburger.hotea.watchdir.FileWatcherBuilder;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -36,16 +40,18 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 @Plugin(id = "ch.vorburger.hotea", name = "HOT Reload Plug-In", description = "Loads and reloads other plugins on changes; useful for development. Currently requires patched Sponge (with support for HotPluginManager)", version = "3.0.0-SNAPSHOT", authors = "Michael Vorburger.ch")
 public class HoteaPlugin {
 
-	// TODO Hot reload changes to the config file!
 	// TODO make a public Service API, higher level than HotPluginManager, using which other plugins can register gradle projets as new plugins
 	
 	private @Inject Logger logger;
+	private @Inject @DefaultConfig(sharedRoot = true) Path configPath;
 	private @Inject @DefaultConfig(sharedRoot = true) ConfigurationLoader<CommentedConfigurationNode> configManager;
 	private @Inject DefaultObjectMapperFactory objectMapperFactory;
 
+	private DirectoryWatcher fileWatcher;
 	private Configuration configuration;
 	private HotPluginManager hotPluginManager;
 	private List<HotClassLoader> hotClassLoaders = new ArrayList<>();
+	private HotClassLoader.ExceptionHandler exceptionHandler;
 
 	private void loadConfiguration() {
 		try {
@@ -56,8 +62,10 @@ public class HoteaPlugin {
 				configuration.hotPluginsLocations = new ArrayList<>(1);
 				configuration.hotPluginsLocations.add(new HotPluginsLocation());
 				configuration.hotPluginsLocations.get(0).classpathLocations = new ArrayList<>(1);
-				objectMapperFactory.getMapper(Configuration.class).bind(configuration).serialize(node);
-				configManager.save(node);
+				if (!configPath.toFile().exists()) {
+					objectMapperFactory.getMapper(Configuration.class).bind(configuration).serialize(node);
+					configManager.save(node);
+				}
 			}
 		} catch (IOException | ObjectMappingException e) {
 			throw new IllegalArgumentException("Could not load configuration" , e);
@@ -71,7 +79,7 @@ public class HoteaPlugin {
 				continue;
 			ClassLoader parentClassLoader = HoteaPlugin.class.getClassLoader(); // or, but NOT org.spongepowered.api.plugin.Plugin, that's another one that leads to a java.lang.LinkageError: loader constraint violation: loader (instance of sun/misc/Launcher$AppClassLoader) previously initiated loading for a different type with name "org/slf4j/Logger"
 			try {
-				HotClassLoaderBuilder builder = new HotClassLoaderBuilder().setParentClassLoader(parentClassLoader);
+				HotClassLoaderBuilder builder = new HotClassLoaderBuilder().setParentClassLoader(parentClassLoader).setListenerExceptionHandler(exceptionHandler);
 				for (String classpathLocation : hotPluginsLocation.classpathLocations)
 					builder.addClasspathEntry(classpathLocation);
 				hotClassLoaders.add(builder.addListener(new HoteaListener(hotPluginManager)).build());
@@ -82,12 +90,21 @@ public class HoteaPlugin {
 	}
 
 	private void closeHotClassLoaders() {
-		hotClassLoaders.forEach(hcl -> hcl.close());
+		hotClassLoaders.forEach(hcl -> unloadAndClose(hcl));
 		hotClassLoaders.clear();
 	}
 
+	private void unloadAndClose(HotClassLoader hcl) {
+		for (HotClassLoader.Listener l : hcl.getListeners()) {
+			if (l instanceof HoteaListener) {
+				HoteaListener hl = (HoteaListener) l;
+				hl.unload();
+			}
+		}
+	}
+
 	@Listener
-	public void onServerStarting(GameStartingServerEvent event) {
+	public void onServerStarting(GameStartingServerEvent event) throws IOException {
 		//Optional<HotPluginManager> optHotPluginManager = Sponge.getServiceManager().provide(HotPluginManager.class);
 		PluginManager spongePluginManager = Sponge.getPluginManager();
 		if (!(spongePluginManager instanceof HotPluginManager)) {
@@ -95,13 +112,18 @@ public class HoteaPlugin {
 		}
 		hotPluginManager = (HotPluginManager) spongePluginManager;
 
-		loadConfiguration();
-		loadHotPlugins();
+		exceptionHandler = t -> logger.error("Trouble from Hotea", t);
+		
+		fileWatcher = new FileWatcherBuilder().path(configPath).listener((Path path, ChangeKind changeKind) -> {
+			logger.info("HOT loading plugins as per {}", configPath);
+			loadConfiguration(); 
+			loadHotPlugins();				
+		}).exceptionHandler(exceptionHandler).build();
 	}
 
 	@Listener
 	public void onServerStopping(GameStoppingServerEvent event) {
-		// NOTE: We only close the Hotea HCL, but do not stop the Sponge plugins, because Sponge will do that itself during a "real" shutdown
+		fileWatcher.close();
 		closeHotClassLoaders();
 	}
 

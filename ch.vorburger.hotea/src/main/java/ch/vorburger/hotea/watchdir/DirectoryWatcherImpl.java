@@ -30,18 +30,14 @@ import org.slf4j.LoggerFactory;
  * @author Michael Vorburger
  */
 // intentionally package local, for now
-class DirectoryWatcherImpl implements DirectoryWatcher {
+public class DirectoryWatcherImpl implements DirectoryWatcher {
 	private final static Logger log = LoggerFactory.getLogger(DirectoryWatcherImpl.class);
 
-//	protected final File dir;
-	protected final Listener listener;
 	protected final WatchService watcher = FileSystems.getDefault().newWatchService(); // better final, as it will be accessed by both threads (normally OK either way, but still)
 	protected final Thread thread;
 
 	/** Clients should use DirectoryWatcherBuilder */
 	protected DirectoryWatcherImpl(boolean watchSubDirectories, final Path watchBasePath, final Listener listener, ExceptionHandler exceptionHandler) throws IOException {
-//		this.dir = dir;
-		this.listener = listener;
 		if (!watchBasePath.toFile().isDirectory())
 			throw new IllegalArgumentException("Not a directory: " + watchBasePath.toString());
 
@@ -92,9 +88,9 @@ class DirectoryWatcherImpl implements DirectoryWatcher {
 						// To reduce notifications, only call the Listener on Modify and Delete but not Create,
 						// because (on Linux at least..) every ENTRY_CREATE from new file
 						// is followed by an ENTRY_MODIFY anyway.
-	                	try {
-							ChangeKind ourkind = kind == StandardWatchEventKinds.ENTRY_MODIFY ? ChangeKind.MODIFIED : ChangeKind.DELETED;
-							listener.onChange(absolutePath, ourkind);
+				    	try {
+							ChangeKind ourKind = kind == StandardWatchEventKinds.ENTRY_MODIFY ? ChangeKind.MODIFIED : ChangeKind.DELETED;
+							listener.onChange(absolutePath, ourKind);
 						} catch (Throwable e) {
 							exceptionHandler.onException(e);
 						}
@@ -123,8 +119,8 @@ class DirectoryWatcherImpl implements DirectoryWatcher {
 	
 	protected void registerOne(final Path path) throws IOException {
 		path.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-        if (log.isDebugEnabled())
-        	log.debug("Registered: {}", path.toString());
+        if (log.isTraceEnabled())
+        	log.trace("Registered: {}", path.toString());
 	}
 
 	// Implementation inspired by https://docs.oracle.com/javase/tutorial/essential/io/examples/WatchDir.java, from https://docs.oracle.com/javase/tutorial/essential/io/notification.html

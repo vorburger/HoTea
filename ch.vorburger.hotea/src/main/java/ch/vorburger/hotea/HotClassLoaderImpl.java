@@ -6,6 +6,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -28,15 +29,13 @@ class HotClassLoaderImpl implements HotClassLoader {
 	private URLClassLoader currentClassLoader;
 
 	protected HotClassLoaderImpl(List<Path> classpathEntries, ClassLoader parentClassLoader, List<HotClassLoader.Listener> listeners, ExceptionHandler exceptionHandler) throws IOException {
-		this.listeners = listeners;
+		this.listeners = Collections.unmodifiableList(listeners);
 		this.exceptionHandler = exceptionHandler;
 		this.parentClassLoader = parentClassLoader;
 		
 		this.urls = getURLs(classpathEntries);
 		this.currentClassLoader = getNewClassLoader();
 		this.watchers = setUpFileChangeListeners(classpathEntries);
-
-		notifyListeners();
 	}
 
 	@Override
@@ -141,6 +140,11 @@ class HotClassLoaderImpl implements HotClassLoader {
 				throw new IllegalArgumentException("URL created from Path which is a directory does not end with slash as required by the URLClassLoader: " + path.toString());
 		
 		return url;
+	}
+
+	@Override
+	public List<Listener> getListeners() {
+		return listeners;
 	}
 
 }
