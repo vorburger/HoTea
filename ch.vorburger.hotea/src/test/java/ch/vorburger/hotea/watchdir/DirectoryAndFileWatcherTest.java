@@ -42,9 +42,11 @@ public class DirectoryAndFileWatcherTest {
 	public void testFileWatcher() throws Throwable {
 		assertableExceptionHandler = new AssertableExceptionHandler();
 		final File dir = new File("target/tests/FileWatcherTest/");
-		dir.mkdirs();
+		final File subDir = new File(dir.getParentFile(), "subDir");
+		subDir.mkdirs();
 		File file = new File(dir, "yo.txt");
 		Files.write("yo", file, Charsets.US_ASCII);
+		Files.write("bo", new File(subDir, "bo.txt"), Charsets.US_ASCII);
 
 		try (DirectoryWatcher dw = new FileWatcherBuilder()
 				.path(file).listener((p, c) -> {

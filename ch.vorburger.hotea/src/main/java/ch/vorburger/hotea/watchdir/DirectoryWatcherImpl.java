@@ -39,13 +39,13 @@ class DirectoryWatcherImpl implements DirectoryWatcher {
 	protected final Thread thread;
 
 	/** Clients should use DirectoryWatcherBuilder */
-	protected DirectoryWatcherImpl(final Path watchBasePath, final Listener listener, ExceptionHandler exceptionHandler) throws IOException {
+	protected DirectoryWatcherImpl(boolean watchSubDirectories, final Path watchBasePath, final Listener listener, ExceptionHandler exceptionHandler) throws IOException {
 //		this.dir = dir;
 		this.listener = listener;
 		if (!watchBasePath.toFile().isDirectory())
 			throw new IllegalArgumentException("Not a directory: " + watchBasePath.toString());
 
-		registerAll(watchBasePath);
+		register(watchSubDirectories, watchBasePath);
 		Runnable r = () -> {
 			for (;;) {
 				WatchKey key;
@@ -81,7 +81,7 @@ class DirectoryWatcherImpl implements DirectoryWatcher {
 					if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
 						if (Files.isDirectory(absolutePath)) { // don't NOFOLLOW_LINKS
 							try {
-								registerAll(absolutePath);
+								register(watchSubDirectories, watchBasePath);
 							} catch (IOException e) {
 								exceptionHandler.onException(e);
 							}
@@ -114,6 +114,19 @@ class DirectoryWatcherImpl implements DirectoryWatcher {
 		thread.start();
 	}
 
+	protected void register(boolean watchSubDirectories, final Path path) throws IOException {
+		if (watchSubDirectories)
+			registerAll(path);
+		else
+			registerOne(path);
+	}
+	
+	protected void registerOne(final Path path) throws IOException {
+		path.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+        if (log.isDebugEnabled())
+        	log.debug("Registered: {}", path.toString());
+	}
+
 	// Implementation inspired by https://docs.oracle.com/javase/tutorial/essential/io/examples/WatchDir.java, from https://docs.oracle.com/javase/tutorial/essential/io/notification.html
 
 	protected void registerAll(final Path basePath) throws IOException {
@@ -122,9 +135,7 @@ class DirectoryWatcherImpl implements DirectoryWatcher {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
             {
-                dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-                if (log.isDebugEnabled())
-                	log.debug("Registered: {}", dir.toString());
+            	registerOne(dir);
                 return FileVisitResult.CONTINUE;
             }
         });
