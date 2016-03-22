@@ -96,6 +96,7 @@ public class HotClassLoaderTest {
 			assertEquals("world, hello!", someAPI.whatup());
 			assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
 			assertTrue(newTargetClassFile.delete());
+			Thread.sleep(100); // because of quietPeriodInMS
 			// Note that now we expect a problem - we won't be able to reload the Class that was just deleted
 			assertableExceptionHandler.assertErrorCaughtFromTheBackgroundThread();
 		}
