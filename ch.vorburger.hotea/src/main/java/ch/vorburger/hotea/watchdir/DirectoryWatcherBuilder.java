@@ -21,7 +21,8 @@ public class DirectoryWatcherBuilder {
 	protected Path path;
 	protected Listener listener;
 	protected ExceptionHandler exceptionHandler = new LoggingExceptionHandler();
-	
+	protected long quietPeriodInMS = 100;
+
 	public DirectoryWatcherBuilder path(File directory) {
 		return path(directory.toPath());
 	}
@@ -45,11 +46,16 @@ public class DirectoryWatcherBuilder {
 		return this;
 	}
 	
+	public DirectoryWatcherBuilder quietPeriodInMS(long quietPeriodInMS) {
+		this.quietPeriodInMS = quietPeriodInMS;
+		return this;
+	}
+	
 	public DirectoryWatcher build() throws IOException {
 		check();
 		if (!path.toFile().isDirectory())
 			throw new IllegalStateException("When using DirectoryWatcherBuilder, set path() to a directory, not a file (use FileWatcherBuilder to watch a single file)");
-		return new DirectoryWatcherImpl(path, listener, exceptionHandler);
+		return new DirectoryWatcherImpl(path, getQuietListener(listener), exceptionHandler);
 	}
 
 	protected void check() {
@@ -61,6 +67,10 @@ public class DirectoryWatcherBuilder {
 			throw new IllegalStateException("listener not set");
 		if (this.exceptionHandler == null)
 			throw new IllegalStateException("exceptionHandler not set");
+	}
+
+	protected Listener getQuietListener(Listener listenerToWrap) {
+		return new QuietPeriodListener(quietPeriodInMS, listenerToWrap, exceptionHandler);
 	}
 
 }

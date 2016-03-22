@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2015 by Michael Vorburger
  */
-package ch.vorburger.hotea.tests;
+package ch.vorburger.hotea.watchdir;
 
 import static com.jayway.awaitility.Awaitility.await;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -30,7 +30,7 @@ import ch.vorburger.hotea.watchdir.FileWatcherBuilder;
  */
 public class DirectoryAndFileWatcherTest {
 
-	AssertableExceptionHandler assertableExceptionHandler = new AssertableExceptionHandler();
+	AssertableExceptionHandler assertableExceptionHandler;
 	volatile boolean changed;
 
 	@BeforeClass
@@ -40,6 +40,7 @@ public class DirectoryAndFileWatcherTest {
 
 	@Test
 	public void testFileWatcher() throws Throwable {
+		assertableExceptionHandler = new AssertableExceptionHandler();
 		final File dir = new File("target/tests/FileWatcherTest/");
 		dir.mkdirs();
 		File file = new File(dir, "yo.txt");
@@ -83,6 +84,7 @@ public class DirectoryAndFileWatcherTest {
 
 	@Test
 	public void testDirectoryWatcher() throws Throwable {
+		assertableExceptionHandler = new AssertableExceptionHandler();
 		final File dir = new File("target/tests/DirectoryWatcherTest/some/sub/directory");
 		dir.mkdirs();
 		final File subDir = new File(dir.getParentFile(), "another");
@@ -124,11 +126,13 @@ public class DirectoryAndFileWatcherTest {
 
 	@Test(expected=AssertionError.class)
 	public void testDirectoryWatcherListenerExceptionPropagation() throws Throwable {
+		assertableExceptionHandler = new AssertableExceptionHandler();
 		final File testFile = new File("target/tests/DirectoryWatcherTest/someFile");
 		testFile.delete();
 		final File dir = testFile.getParentFile();
 		dir.mkdirs();
 		try (DirectoryWatcher dw = new DirectoryWatcherBuilder().path(dir)
+				.quietPeriodInMS(0)
 				.listener((p, c) -> {
 					fail("duh!");
 				}).exceptionHandler(assertableExceptionHandler).build()) {

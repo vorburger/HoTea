@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2016 by Michael Vorburger
+ */
 package ch.vorburger.hotea.watchdir;
 
 import java.io.File;
@@ -7,6 +10,11 @@ import java.nio.file.Path;
 import ch.vorburger.hotea.watchdir.DirectoryWatcher.ChangeKind;
 import ch.vorburger.hotea.watchdir.DirectoryWatcher.Listener;
 
+/**
+ * Builder which watches one single file for changes.
+ *
+ * @author Michael Vorburger
+ */
 public class FileWatcherBuilder extends DirectoryWatcherBuilder {
 
 	@Override public DirectoryWatcherBuilder path(File fileNotDirectory) {
@@ -22,17 +30,20 @@ public class FileWatcherBuilder extends DirectoryWatcherBuilder {
 		check();
 		if (!path.toFile().isFile())
 			throw new IllegalStateException("When using FileWatcherBuilder, set path() to a single file, not a directory (use DirectoryWatcherBuilder to watch a directory, and it's subdirectories)");
-		return new DirectoryWatcherImpl(path.getParent(), new FileWatcherListener(path, listener), exceptionHandler);
+		// NOTE We do want to wrap the FileWatcherListener inside the QuietPeriodListener, and not the other way around!
+		Listener wrap = getQuietListener(new FileWatcherListener(path, listener));
+		return new DirectoryWatcherImpl(path.getParent(), wrap, exceptionHandler);
 	}
+
 
 	protected static class FileWatcherListener implements Listener {
 
 		private final Listener delegate;
 		private Path fileToWatch;
 
-		public FileWatcherListener(Path fileToWatch, Listener listener) {
+		protected FileWatcherListener(Path fileToWatch, Listener listenerToWrap) {
 			this.fileToWatch = fileToWatch;
-			this.delegate = listener;
+			this.delegate = listenerToWrap;
 		}
 
 		@Override
