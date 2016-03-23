@@ -77,12 +77,12 @@ public class HoteaPlugin {
 		for (HotPluginsLocation hotPluginsLocation : configuration.hotPluginsLocations) {
 			if (hotPluginsLocation.classpathLocations.isEmpty())
 				continue;
-			ClassLoader parentClassLoader = HoteaPlugin.class.getClassLoader(); // or, but NOT org.spongepowered.api.plugin.Plugin, that's another one that leads to a java.lang.LinkageError: loader constraint violation: loader (instance of sun/misc/Launcher$AppClassLoader) previously initiated loading for a different type with name "org/slf4j/Logger"
+			ClassLoader parentClassLoader = HoteaPlugin.class.getClassLoader(); // but NOT org.spongepowered.api.plugin.Plugin, that's another one that leads to a java.lang.LinkageError: loader constraint violation: loader (instance of sun/misc/Launcher$AppClassLoader) previously initiated loading for a different type with name "org/slf4j/Logger"
 			try {
 				HotClassLoaderBuilder builder = new HotClassLoaderBuilder().setParentClassLoader(parentClassLoader).setListenerExceptionHandler(exceptionHandler);
 				for (String classpathLocation : hotPluginsLocation.classpathLocations)
 					builder.addClasspathEntry(classpathLocation);
-				hotClassLoaders.add(builder.addListener(new HoteaListener(hotPluginManager)).build());
+				hotClassLoaders.add(builder.addListener(new HoteaListener(hotPluginManager, this)).build());
 			} catch (Exception e) {
 				logger.error("HotClassLoaderBuilder failed", e);
 			}
@@ -96,10 +96,8 @@ public class HoteaPlugin {
 
 	private void unloadAndClose(HotClassLoader hcl) {
 		for (HotClassLoader.Listener l : hcl.getListeners()) {
-			if (l instanceof HoteaListener) {
-				HoteaListener hl = (HoteaListener) l;
-				hl.unload();
-			}
+			HoteaListener hl = (HoteaListener) l;
+			hl.unloadOnMainServerThread();
 		}
 	}
 
