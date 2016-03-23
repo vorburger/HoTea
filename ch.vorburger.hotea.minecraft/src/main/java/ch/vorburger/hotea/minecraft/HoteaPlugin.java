@@ -123,7 +123,8 @@ public class HoteaPlugin {
 
 	@Listener
 	public void onServerStopping(GameStoppingServerEvent event) {
-		fileWatcher.close();
+		if (fileWatcher != null)
+			fileWatcher.close();
 		closeHotClassLoaders();
 	}
 
