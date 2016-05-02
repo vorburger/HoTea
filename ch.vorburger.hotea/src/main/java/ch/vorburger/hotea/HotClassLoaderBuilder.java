@@ -44,6 +44,12 @@ public class HotClassLoaderBuilder {
 		return this;
 	}
 
+	public HotClassLoaderBuilder addClasspathEntries(List<Path> paths) {
+		for (Path path : paths)
+			addClasspathEntry(path);
+		return this;
+	}
+	
 	public HotClassLoaderBuilder addListener(HotClassLoader.Listener listener) {
 		listeners.add(listener);
 		return this;
