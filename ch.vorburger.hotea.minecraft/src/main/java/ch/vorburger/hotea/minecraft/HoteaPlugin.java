@@ -83,6 +83,7 @@ public class HoteaPlugin {
 						.setParentClassLoader(parentClassLoader)
 						.setListenerExceptionHandler(exceptionHandler);
 				if (hotPluginsLocation.eclipseDotClasspathFileLocation != null) {
+					// NOTE: What we are doing here will NOT hot-reload changes to .classpath with e.g. new libraries.. only changes within the classpath entries (notably 'output/**/*.class) as of the time of reading the .classpath 
 					Path path = Paths.get(hotPluginsLocation.eclipseDotClasspathFileLocation.trim());
 					EclipseClasspathFileReader r = new EclipseClasspathFileReader(path);
 					builder.addClasspathEntries(r.getPaths());

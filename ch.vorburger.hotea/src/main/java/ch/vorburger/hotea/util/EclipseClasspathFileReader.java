@@ -48,13 +48,14 @@ public class EclipseClasspathFileReader {
 						add(atts, eclipseDotClasspathFile);
 						break;
 					case "con":
-						if (!"org.eclipse.jdt.launching.JRE_CONTAINER".equals(atts.getValue("path")))
-							throw new IllegalArgumentException("Unknown classpathentry kind of kind 'con' (only org.eclipse.jdt.launching.JRE_CONTAINER accepted): " + atts);
+						String path = atts.getValue("path");
+						if (!"org.eclipse.jdt.launching.JRE_CONTAINER".equals(path))
+							throw new IllegalArgumentException("Unknown classpathentry kind of kind 'con' (only org.eclipse.jdt.launching.JRE_CONTAINER accepted): " + path);
 					case "src":
 						// Ignore
 						break;
 					default:
-						throw new IllegalArgumentException("Unknown classpathentry kind: " + atts);
+						throw new IllegalArgumentException("Unknown classpathentry kind: " + kind);
 					}
 				}
 			});
@@ -67,10 +68,10 @@ public class EclipseClasspathFileReader {
 	protected void add(Attributes atts, Path eclipseDotClasspathFile) {
 		String pathName = atts.getValue("path");
 		if (pathName == null)
-			throw new IllegalArgumentException("No 'path' in: " + atts + "of: " + eclipseDotClasspathFile);
+			throw new IllegalArgumentException("Missing 'path=' in <classpathentry> of: " + eclipseDotClasspathFile);
 		pathName = pathName.trim();
 		if (pathName.isEmpty())
-			throw new IllegalArgumentException("Empty 'path' in: " + atts + "of: " + eclipseDotClasspathFile);
+			throw new IllegalArgumentException("Empty 'path=' in <classpathentry> of: " + eclipseDotClasspathFile);
     	Path path = Paths.get(pathName);
 		if (!path.isAbsolute()) {
 	    	Path projectDirectory = eclipseDotClasspathFile.normalize().getParent();
