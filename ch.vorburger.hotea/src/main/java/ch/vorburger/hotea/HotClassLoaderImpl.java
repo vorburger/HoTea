@@ -29,7 +29,7 @@ class HotClassLoaderImpl implements HotClassLoader {
 	private URLClassLoader currentClassLoader;
 
 	protected HotClassLoaderImpl(List<Path> classpathEntries, ClassLoader parentClassLoader, List<HotClassLoader.Listener> listeners, ExceptionHandler exceptionHandler) throws IOException {
-		this.listeners = Collections.unmodifiableList(listeners);
+		this.listeners = Collections.unmodifiableList(new ArrayList<>(listeners));
 		this.exceptionHandler = exceptionHandler;
 		this.parentClassLoader = parentClassLoader;
 		
