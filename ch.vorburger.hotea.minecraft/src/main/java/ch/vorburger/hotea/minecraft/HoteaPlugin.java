@@ -2,6 +2,7 @@ package ch.vorburger.hotea.minecraft;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import ch.vorburger.hotea.HotClassLoader;
 import ch.vorburger.hotea.HotClassLoaderBuilder;
 import ch.vorburger.hotea.minecraft.Configuration.HotPluginsLocation;
 import ch.vorburger.hotea.minecraft.api.HotPluginManager;
+import ch.vorburger.hotea.util.EclipseClasspathFileReader;
 import ch.vorburger.hotea.watchdir.DirectoryWatcher;
 import ch.vorburger.hotea.watchdir.DirectoryWatcher.ChangeKind;
 import ch.vorburger.hotea.watchdir.FileWatcherBuilder;
@@ -74,14 +76,22 @@ public class HoteaPlugin {
 	
 	private void loadHotPlugins() {
 		closeHotClassLoaders();
+		ClassLoader parentClassLoader = HoteaPlugin.class.getClassLoader(); // but NOT org.spongepowered.api.plugin.Plugin, that's another one that leads to a java.lang.LinkageError: loader constraint violation: loader (instance of sun/misc/Launcher$AppClassLoader) previously initiated loading for a different type with name "org/slf4j/Logger"
 		for (HotPluginsLocation hotPluginsLocation : configuration.hotPluginsLocations) {
-			if (hotPluginsLocation.classpathLocations.isEmpty())
-				continue;
-			ClassLoader parentClassLoader = HoteaPlugin.class.getClassLoader(); // but NOT org.spongepowered.api.plugin.Plugin, that's another one that leads to a java.lang.LinkageError: loader constraint violation: loader (instance of sun/misc/Launcher$AppClassLoader) previously initiated loading for a different type with name "org/slf4j/Logger"
 			try {
-				HotClassLoaderBuilder builder = new HotClassLoaderBuilder().setParentClassLoader(parentClassLoader).setListenerExceptionHandler(exceptionHandler);
-				for (String classpathLocation : hotPluginsLocation.classpathLocations)
-					builder.addClasspathEntry(classpathLocation);
+				HotClassLoaderBuilder builder = new HotClassLoaderBuilder()
+						.setParentClassLoader(parentClassLoader)
+						.setListenerExceptionHandler(exceptionHandler);
+				if (hotPluginsLocation.eclipseDotClasspathFileLocation != null) {
+					Path path = Paths.get(hotPluginsLocation.eclipseDotClasspathFileLocation.trim());
+					EclipseClasspathFileReader r = new EclipseClasspathFileReader(path);
+					builder.addClasspathEntries(r.getPaths());
+				} else {
+					if (hotPluginsLocation.classpathLocations.isEmpty())
+						continue;
+					for (String classpathLocation : hotPluginsLocation.classpathLocations)
+						builder.addClasspathEntry(classpathLocation);
+				}
 				hotClassLoaders.add(builder.addListener(new HoteaListener(hotPluginManager, this)).build());
 			} catch (Exception e) {
 				logger.error("HotClassLoaderBuilder failed", e);
