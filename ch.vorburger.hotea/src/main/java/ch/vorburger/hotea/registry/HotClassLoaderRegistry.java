@@ -17,6 +17,7 @@ import ch.vorburger.hotea.HotClassLoaderBuilder;
  */
 public interface HotClassLoaderRegistry {
 
+	// TODO use https://github.com/lukehutch/fast-classpath-scanner for this
 	// TODO how to find WHICH classLoader to replace on reload.. implement some sensible equals() - in a new HotClassLoaderProvider?
 	// TODO need to remember from which "bundle" (no, no interface for this!) we obtained a given class?
 	// TODO this will need a cache, for performance alone! Use Spring??

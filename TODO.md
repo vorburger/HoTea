@@ -1,3 +1,7 @@
+- [ ] Use https://github.com/lukehutch/fast-classpath-scanner for something like ch.vorburger.hotea.registry.HotClassLoaderRegistry
+
+- [ ] Offer https://github.com/jhades/jhades to support trouble shooting
+
 - [ ] DirectoryWatcher probably doesn't handle e.g. renamed directories nicely yet - test! Use keys from https://docs.oracle.com/javase/tutorial/essential/io/examples/WatchDir.java ?
 
 - [ ] Minecraft!
