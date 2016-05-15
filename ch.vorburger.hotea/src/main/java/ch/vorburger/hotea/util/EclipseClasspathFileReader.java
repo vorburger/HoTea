@@ -49,13 +49,13 @@ public class EclipseClasspathFileReader {
 						break;
 					case "con":
 						String path = atts.getValue("path");
-						if (!"org.eclipse.jdt.launching.JRE_CONTAINER".equals(path))
-							throw new IllegalArgumentException("Unknown classpathentry kind of kind 'con' (only org.eclipse.jdt.launching.JRE_CONTAINER accepted): " + path);
+						if (!path.startsWith("org.eclipse.jdt.launching.JRE_CONTAINER"))
+							throw new IllegalArgumentException("Unknown classpathentry kind of kind 'con' (only org.eclipse.jdt.launching.JRE_CONTAINER accepted): " + path  + " in: " + eclipseDotClasspathFile);
 					case "src":
 						// Ignore
 						break;
 					default:
-						throw new IllegalArgumentException("Unknown classpathentry kind: " + kind);
+						throw new IllegalArgumentException("Unknown classpathentry kind: " + kind + " in: " + eclipseDotClasspathFile);
 					}
 				}
 			});
