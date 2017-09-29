@@ -1,7 +1,7 @@
 Hot Chai (tea) with Java coffee (ch.vorburger.hotea)
 ====
 
-__*Please check out the follow-up projects [ch.vorburger.osgi.gradle](https://github.com/vorburger/ch.vorburger.osgi.gradle) and [ch.vorburger.minecraft.osgi](https://github.com/vorburger/ch.vorburger.minecraft.osgi).*__
+__*Please also check out the follow-up projects [ch.vorburger.osgi.gradle](https://github.com/vorburger/ch.vorburger.osgi.gradle) and [ch.vorburger.minecraft.osgi](https://github.com/vorburger/ch.vorburger.minecraft.osgi).*__
 
 The Minecraft specific part is in the [minecraft/ module](ch.vorburger.hotea.minecraft). What follows here is a general library (not Minecraft related, but the Minecraft module uses this).
 
@@ -40,6 +40,8 @@ Class A: Approaches which hot-reload classes on your (already loaded) "main" pri
 
 Class B: Other extensions/modules/plugins/bundles
 * OSGi (eclipse.org/rt: eclipse.org/equinox, eclipse.org/virgo, eclipse.org/gemini; felix.apache.org & karaf.apache.org; bndtools.org BND Tools; Spring Dynamic Modulees DM)
+* [JBoss Modules](https://github.com/jboss-modules/jboss-modules) (and [Doc](https://docs.jboss.org/author/display/MODULES/Home))
+* [NucleusPowered/QuickStartModuleLoader](https://github.com/NucleusPowered/QuickStartModuleLoader)
 * http://jpf.sourceforge.net
 * https://code.google.com/p/jspf/ : No hot unload
 * https://code.google.com/p/impala/
