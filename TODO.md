@@ -7,6 +7,7 @@
 - [ ] Minecraft!
   - [ ] Forwarding Mod using Hot Chai
   - [ ] Look into server src and patch
+  - [ ] Update https://forums.spongepowered.org/t/plugin-reloader/10666/7 when I have a new Minecraft demo working again
 
 - [ ] ch.vorburger.hotea.compilewatchedfiles, using .. http://commons.apache.org/proper/commons-jci/usage.html ?
 - [ ] ch.vorburger.hotea.compilewatchedfiles.xtend

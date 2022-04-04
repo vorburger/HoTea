@@ -5,7 +5,7 @@ __*Please also check out the follow-up projects [ch.vorburger.osgi.gradle](https
 
 __*The [hotea/watchdir](ch.vorburger.hotea/src/main/java/ch/vorburger/hotea/watchdir) utility is now a separate project, see https://github.com/vorburger/ch.vorburger.fswatch.*__
 
-The Minecraft specific part is in the [minecraft/ module](ch.vorburger.hotea.minecraft). What follows here is a general library (not Minecraft related, but the Minecraft module uses this).
+The Minecraft specific part was in [minecraft/ module](ch.vorburger.hotea.minecraft). What follows here is a general library that is not Minecraft related. (But the Minecraft module used this in 2017. Since changes made when picking up this project in 2022, the original Minecraft demo is broken; however work has now started to add the equivalent funcationality into https://github.com/OASIS-learn-study/minecraft-storeys-maker, see [its issue #58](https://github.com/OASIS-learn-study/minecraft-storeys-maker/issues/58).
 
 Hotea is a "kept it simple and stupid" (KISS) Java Mod-ules/Plug-In mini framework with HOT Class reloading to "support dynamic script like source code" (through isolated ClassLoader/s).  This may be of interest and useful to you to build things ranging from e.g. plugins for game engines to perhaps some sort of runtime changeable coded out "business rule" stuff.
 
@@ -18,7 +18,7 @@ Use of Java 8 is recommended to avoid PermGen memory issues due to Class reloadi
 Features: (what it does do)
 * Load Java byte code for additional *.classes from directory/-ies and/or JARs, through a child ClassLoader
 * Hot reload such extensions/modules/plugins/bundles whenever any files in the watched classpath directory are updated
-* Notify your code whenever it hot reloaded, so that you can do what you need to do in your code (say cleanly shut down previous instances of your classes, and re-instantiate objects using your new class definitions) 
+* Notify your code whenever it hot reloaded, so that you can do what you need to do in your code (say cleanly shut down previous instances of your classes, and re-instantiate objects using your new class definitions)
 * _TODO Build *.class files from *.java sources files, and auto. rebuild on any changes (ch.vorburger.hotea.compilewatchedfiles)_
 * No need to follow a particular "Plugin API" at all (of Hotea, there is none) - you can hot (re)load any class implementing any of your own "API" interface
 
@@ -31,7 +31,7 @@ Non-Features, what it does *NOT* do, not today and not planned:
 
 Hotea is thus somewhat similar yet quite different from:
 
-Class A: Approaches which hot-reload classes on your (already loaded) "main" primary classpath typically through a custom JVM Agent (with more or less limitations): 
+Class A: Approaches which hot-reload classes on your (already loaded) "main" primary classpath typically through a custom JVM Agent (with more or less limitations):
 
 * http://hotswapagent.org
 * http://dcevm.github.io
