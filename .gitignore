@@ -1,6 +1,12 @@
 target/
+
 bin/
+.classpath
+.settings/
+.project
+
 build/
 .gradle/
 .settings/
+
 *~
