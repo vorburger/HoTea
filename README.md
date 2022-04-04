@@ -11,6 +11,9 @@ Hotea is a "kept it simple and stupid" (KISS) Java Mod-ules/Plug-In mini framewo
 
 Watch this https://www.youtube.com/watch?v=oMhY075hx9k and this https://www.youtube.com/watch?v=mibW8MhenGc vidoe, or see e.g. the [HotSwingExampleMain](ch.vorburger.hotea/src/test/java/ch/vorburger/hotea/examples/swing/HotSwingExampleMain.java) or [the Tests](ch.vorburger.hotea/src/test/java/ch/vorburger/hotea/tests/), for illustrations regarding what this is really all about.
 
+To run the Swing demo shown in that video, just launch `class HotSwingExampleMain` in your Eclipse IDE,
+and watch it _"live update"_ as you change the text of the `JLabel(" hello, world ")` in `class ExampleSwingDrawer`.
+
 Caveat emptor: This is intended for and best works with simple plugin-like scenarios, where the classpath of each such plugin does not overlap nor need to share instances among different plugins. In more interesting use cases, by experience, Very Weired Things (VWT) may happen if you don't fully understand what you are actually doing when several class loaders are involved in Java. You have been warned.
 
 Use of Java 8 is recommended to avoid PermGen memory issues due to Class reloading.

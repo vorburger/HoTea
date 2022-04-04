@@ -45,9 +45,9 @@ public class HotSwingExampleMain implements Listener {
 
 	public static void main(String[] args) throws Exception {
 		// System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
-		File pluginClassesBaseDir = new File(args[0]);
-		String drawerImplementationClassName = args[1];
-		new HotSwingExampleMain().run(pluginClassesBaseDir, drawerImplementationClassName);
+        new HotSwingExampleMain().run(
+                new File("../ch.vorburger.hotea.examples.swing/target/classes"), 
+                "ch.vorburger.hotea.examples.swing1.ExampleSwingDrawer");
 	}
 
 }

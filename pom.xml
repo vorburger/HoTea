@@ -9,5 +9,7 @@
 
 	<modules>
 		<module>ch.vorburger.hotea</module>
+        <module>ch.vorburger.hotea.examples.swing-demo</module>
+		<module>ch.vorburger.hotea.examples.swing</module>
 	</modules>
 </project>
