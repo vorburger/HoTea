@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2015 - 2022 by Michael Vorburger
  */
 package ch.vorburger.hotea.util;
