@@ -28,11 +28,14 @@
     </properties>
 
     <dependencies>
-
        <!-- Please keep dependencies of this library minimal.
             This helps with avoiding funky ClassLoader issues in applications using it.
         -->
-
+        <dependency>
+          <groupId>ch.vorburger</groupId>
+          <artifactId>fswatch</artifactId>
+          <version>1.1.0</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

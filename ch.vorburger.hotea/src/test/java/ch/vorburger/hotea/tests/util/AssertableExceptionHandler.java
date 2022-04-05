@@ -3,17 +3,20 @@ package ch.vorburger.hotea.tests.util;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import ch.vorburger.hotea.HotClassLoader.ExceptionHandler;
-import ch.vorburger.hotea.util.LoggingExceptionHandler;
+import ch.vorburger.fswatch.DirectoryWatcher.ExceptionHandler;
+import ch.vorburger.fswatch.Slf4jLoggingExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * ExceptionHandler useful in multi-threaded tests.
  *
+ * Copy/pasted from
+ * https://github.com/vorburger/ch.vorburger.fswatch/blob/master/src/test/java/ch/vorburger/fswatch/test/AssertableExceptionHandler.java
+ *
  * @author Michael Vorburger
  */
-public class AssertableExceptionHandler extends LoggingExceptionHandler implements ExceptionHandler {
+public class AssertableExceptionHandler extends Slf4jLoggingExceptionHandler implements ExceptionHandler {
     private final static Logger log = LoggerFactory.getLogger(AssertableExceptionHandler.class);
 
     // This stuff isn't 100% concurrency kosher, but "good enough" to cover the tests..
@@ -63,5 +66,4 @@ public class AssertableExceptionHandler extends LoggingExceptionHandler implemen
             lastThrowable = null;
         }
     }
-
 }

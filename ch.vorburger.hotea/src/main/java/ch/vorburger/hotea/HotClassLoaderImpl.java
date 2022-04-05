@@ -1,8 +1,9 @@
 package ch.vorburger.hotea;
 
+import ch.vorburger.fswatch.DirectoryWatcher;
+import ch.vorburger.fswatch.DirectoryWatcher.ExceptionHandler;
+import ch.vorburger.fswatch.DirectoryWatcherBuilder;
 import ch.vorburger.hotea.util.URLClassLoaderWithBetterMessage;
-import ch.vorburger.hotea.watchdir.DirectoryWatcher;
-import ch.vorburger.hotea.watchdir.DirectoryWatcherBuilder;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;

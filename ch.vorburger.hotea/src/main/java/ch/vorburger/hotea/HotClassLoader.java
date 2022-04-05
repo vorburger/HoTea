@@ -3,7 +3,6 @@
  */
 package ch.vorburger.hotea;
 
-import ch.vorburger.hotea.watchdir.DirectoryWatcher;
 import java.io.Closeable;
 import java.util.List;
 
@@ -32,10 +31,6 @@ public interface HotClassLoader extends Closeable {
          * @throws Throwable if anything went wrong - the caller will log this
          */
         void onReload(ClassLoader newClassLoader) throws Throwable;
-    }
-
-    interface ExceptionHandler extends DirectoryWatcher.ExceptionHandler {
-        @Override void onException(Throwable t);
     }
 
     @Override void close(); // do NOT throws (IO)Exception

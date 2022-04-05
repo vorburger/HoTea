@@ -3,7 +3,8 @@
  */
 package ch.vorburger.hotea;
 
-import ch.vorburger.hotea.util.LoggingExceptionHandler;
+import ch.vorburger.fswatch.DirectoryWatcher.ExceptionHandler;
+import ch.vorburger.fswatch.Slf4jLoggingExceptionHandler;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -19,7 +20,7 @@ public class HotClassLoaderBuilder {
 
     protected List<Path> classpathEntries = new ArrayList<>();
     protected List<HotClassLoader.Listener> listeners = new ArrayList<>();
-    protected HotClassLoader.ExceptionHandler exceptionHandler = new LoggingExceptionHandler();
+    protected ExceptionHandler exceptionHandler = new Slf4jLoggingExceptionHandler();
     protected ClassLoader parentClassLoader;
 
     public HotClassLoaderBuilder addClasspathEntry(File file) {
@@ -58,7 +59,7 @@ public class HotClassLoaderBuilder {
         return this;
     }
 
-    public HotClassLoaderBuilder setListenerExceptionHandler(HotClassLoader.ExceptionHandler exceptionHandler) {
+    public HotClassLoaderBuilder setListenerExceptionHandler(ExceptionHandler exceptionHandler) {
         this.exceptionHandler = exceptionHandler;
         return this;
     }
