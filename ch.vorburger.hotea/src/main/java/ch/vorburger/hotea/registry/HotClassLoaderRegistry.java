@@ -3,9 +3,8 @@
  */
 package ch.vorburger.hotea.registry;
 
-import java.util.List;
-
 import ch.vorburger.hotea.HotClassLoaderBuilder;
+import java.util.List;
 
 /**
  * Registry for typical use case of having to keep track of a number of

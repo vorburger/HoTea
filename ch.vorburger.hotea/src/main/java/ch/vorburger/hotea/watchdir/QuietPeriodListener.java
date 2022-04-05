@@ -3,11 +3,10 @@
  */
 package ch.vorburger.hotea.watchdir;
 
-import java.nio.file.Path;
-
 import ch.vorburger.hotea.watchdir.DirectoryWatcher.ChangeKind;
 import ch.vorburger.hotea.watchdir.DirectoryWatcher.ExceptionHandler;
 import ch.vorburger.hotea.watchdir.DirectoryWatcher.Listener;
+import java.nio.file.Path;
 
 /**
  * Listener which only notifies by delegating to another wrapped Listener after a certain quiet period.

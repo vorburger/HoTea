@@ -3,10 +3,9 @@
  */
 package ch.vorburger.hotea;
 
+import ch.vorburger.hotea.watchdir.DirectoryWatcher;
 import java.io.Closeable;
 import java.util.List;
-
-import ch.vorburger.hotea.watchdir.DirectoryWatcher;
 
 /**
  * Hot Chai Tea Class Loader.

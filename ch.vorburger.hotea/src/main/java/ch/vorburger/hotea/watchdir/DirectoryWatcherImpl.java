@@ -20,7 +20,6 @@ import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

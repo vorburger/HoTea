@@ -3,12 +3,11 @@
  */
 package ch.vorburger.hotea.watchdir;
 
+import ch.vorburger.hotea.watchdir.DirectoryWatcher.ChangeKind;
+import ch.vorburger.hotea.watchdir.DirectoryWatcher.Listener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-
-import ch.vorburger.hotea.watchdir.DirectoryWatcher.ChangeKind;
-import ch.vorburger.hotea.watchdir.DirectoryWatcher.Listener;
 
 /**
  * Builder which watches one single file for changes.

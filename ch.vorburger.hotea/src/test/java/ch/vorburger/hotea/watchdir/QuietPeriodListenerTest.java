@@ -6,12 +6,11 @@ package ch.vorburger.hotea.watchdir;
 import static com.jayway.awaitility.Awaitility.await;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
-
-import org.junit.Test;
+import static org.junit.Assert.assertFalse;
 
 import ch.vorburger.hotea.tests.util.AssertableExceptionHandler;
 import ch.vorburger.hotea.watchdir.DirectoryWatcher.Listener;
+import org.junit.Test;
 
 public class QuietPeriodListenerTest {
 

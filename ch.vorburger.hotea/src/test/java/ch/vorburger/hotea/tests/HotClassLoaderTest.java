@@ -11,17 +11,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import ch.vorburger.hotea.HotClassLoader;
 import ch.vorburger.hotea.HotClassLoaderBuilder;
 import ch.vorburger.hotea.tests.util.AssertableExceptionHandler;
-
 import com.google.common.io.Files;
+import java.io.File;
+import java.io.IOException;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * Tests for HotClassLoaderBuilder.

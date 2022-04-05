@@ -3,13 +3,12 @@
  */
 package ch.vorburger.hotea;
 
+import ch.vorburger.hotea.util.LoggingExceptionHandler;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
-import ch.vorburger.hotea.util.LoggingExceptionHandler;
 
 /**
  * Builder for HotClassLoader.

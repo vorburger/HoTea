@@ -1,12 +1,10 @@
 package ch.vorburger.hotea.examples.swing;
 
-import java.io.File;
-
-import javax.swing.JFrame;
-
 import ch.vorburger.hotea.HotClassLoader;
 import ch.vorburger.hotea.HotClassLoader.Listener;
 import ch.vorburger.hotea.HotClassLoaderBuilder;
+import java.io.File;
+import javax.swing.JFrame;
 
 public class HotSwingExampleMain implements Listener {
 

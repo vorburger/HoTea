@@ -3,10 +3,9 @@
  */
 package ch.vorburger.hotea.util;
 
+import ch.vorburger.hotea.HotClassLoader.ExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ch.vorburger.hotea.HotClassLoader.ExceptionHandler;
 
 /**
  * An ExceptionHandler which logs to slfj4j.

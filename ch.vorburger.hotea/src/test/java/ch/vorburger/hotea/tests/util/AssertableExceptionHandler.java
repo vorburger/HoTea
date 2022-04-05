@@ -3,11 +3,10 @@ package ch.vorburger.hotea.tests.util;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ch.vorburger.hotea.HotClassLoader.ExceptionHandler;
 import ch.vorburger.hotea.util.LoggingExceptionHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ExceptionHandler useful in multi-threaded tests.

@@ -3,14 +3,13 @@
  */
 package ch.vorburger.hotea.watchdir;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-
 import ch.vorburger.hotea.util.LoggingExceptionHandler;
 import ch.vorburger.hotea.watchdir.DirectoryWatcher.ChangeKind;
 import ch.vorburger.hotea.watchdir.DirectoryWatcher.ExceptionHandler;
 import ch.vorburger.hotea.watchdir.DirectoryWatcher.Listener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Builder for DirectoryWatcher.

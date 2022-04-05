@@ -1,5 +1,8 @@
 package ch.vorburger.hotea;
 
+import ch.vorburger.hotea.util.URLClassLoaderWithBetterMessage;
+import ch.vorburger.hotea.watchdir.DirectoryWatcher;
+import ch.vorburger.hotea.watchdir.DirectoryWatcherBuilder;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -8,13 +11,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ch.vorburger.hotea.util.URLClassLoaderWithBetterMessage;
-import ch.vorburger.hotea.watchdir.DirectoryWatcher;
-import ch.vorburger.hotea.watchdir.DirectoryWatcherBuilder;
 
 // intentionally package local, for now
 class HotClassLoaderImpl implements HotClassLoader {

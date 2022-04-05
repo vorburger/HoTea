@@ -1,11 +1,9 @@
 package ch.vorburger.hotea.examples.swing1;
 
+import ch.vorburger.hotea.examples.swing.HotSwingExampleMain;
 import java.awt.Font;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
-import ch.vorburger.hotea.examples.swing.HotSwingExampleMain;
 
 public class ExampleSwingDrawer implements HotSwingExampleMain.Drawer {
 

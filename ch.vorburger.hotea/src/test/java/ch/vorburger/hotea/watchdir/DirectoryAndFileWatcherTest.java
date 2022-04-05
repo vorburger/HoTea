@@ -10,18 +10,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
+import ch.vorburger.hotea.tests.util.AssertableExceptionHandler;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-
-import ch.vorburger.hotea.tests.util.AssertableExceptionHandler;
-import ch.vorburger.hotea.watchdir.DirectoryWatcher;
-import ch.vorburger.hotea.watchdir.DirectoryWatcherBuilder;
-import ch.vorburger.hotea.watchdir.FileWatcherBuilder;
+import java.io.File;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * Tests for {@link DirectoryWatcherBuilder} and @link FileWatcherBuilder}.
