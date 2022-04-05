@@ -17,6 +17,7 @@ import ch.vorburger.hotea.tests.util.AssertableExceptionHandler;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -31,17 +32,17 @@ public class HotClassLoaderTest {
     SomeInterface someAPI;
     AssertableExceptionHandler assertableExceptionHandler = new AssertableExceptionHandler();
 
-//    @BeforeClass
-//    static public void configureSlf4jSimpleShowAllLogs() {
-//        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
-//    }
+    @BeforeClass static public void configureSlf4jSimpleShowAllLogs() {
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
+    }
 
     @Test public void testLoadBinaryJavaClassNotOnClasspath() throws Exception {
         File targetClassFile = copyClassFile("SomeInterfaceImpl-hello_world.class");
-        try(HotClassLoader hcl = new HotClassLoaderBuilder().addClasspathEntry(new File("target/tests/hot/classes")).build()) {
+        try (HotClassLoader hcl = new HotClassLoaderBuilder().addClasspathEntry(new File("target/tests/hot/classes")).build()) {
             ClassLoader classLoader = hcl.getCurrentClassLoader();
-            @SuppressWarnings("unchecked") Class<SomeInterface> klass = (Class<SomeInterface>) classLoader.loadClass("ch.vorburger.hotea.tests.notoncp.SomeInterfaceImpl");
-            SomeInterface someAPI = klass.newInstance();
+            @SuppressWarnings("unchecked") Class<SomeInterface> klass = (Class<SomeInterface>) classLoader
+                    .loadClass("ch.vorburger.hotea.tests.notoncp.SomeInterfaceImpl");
+            SomeInterface someAPI = klass.getDeclaredConstructor().newInstance();
             assertTrue(targetClassFile.delete());
             assertEquals("hello, world", someAPI.whatup());
         }
@@ -67,11 +68,13 @@ public class HotClassLoaderTest {
         copyClassFile("SomeInterfaceImpl-hello_world.class");
 
         // The ClassLoader returned here is not (yet) interesting - its another one with the same version of the Class as above
-        try (HotClassLoader hcl = new HotClassLoaderBuilder().addClasspathEntry(new File("target/tests/hot/classes")).addListener(newClassLoader -> {
-            @SuppressWarnings("unchecked") Class<SomeInterface> klass = (Class<SomeInterface>) newClassLoader.loadClass("ch.vorburger.hotea.tests.notoncp.SomeInterfaceImpl");
-            someAPI = klass.newInstance();
-            ++i;
-        }).setListenerExceptionHandler(assertableExceptionHandler).build()) {
+        try (HotClassLoader hcl = new HotClassLoaderBuilder().addClasspathEntry(new File("target/tests/hot/classes"))
+                .addListener(newClassLoader -> {
+                    @SuppressWarnings("unchecked") Class<SomeInterface> klass = (Class<SomeInterface>) newClassLoader
+                            .loadClass("ch.vorburger.hotea.tests.notoncp.SomeInterfaceImpl");
+                    someAPI = klass.getDeclaredConstructor().newInstance();
+                    ++i;
+                }).setListenerExceptionHandler(assertableExceptionHandler).build()) {
 
             assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
             ClassLoader firstClassLoader = hcl.getCurrentClassLoader();
