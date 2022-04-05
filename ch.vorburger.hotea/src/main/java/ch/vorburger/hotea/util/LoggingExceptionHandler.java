@@ -14,11 +14,11 @@ import ch.vorburger.hotea.HotClassLoader.ExceptionHandler;
  * @author Michael Vorburger
  */
 public class LoggingExceptionHandler implements ExceptionHandler {
-	private final static Logger log = LoggerFactory.getLogger(LoggingExceptionHandler.class);
-	
-	@Override
-	public void onException(Throwable t) {
-		log.error("Oopsy daisy", t);
-	}
+    private final static Logger log = LoggerFactory.getLogger(LoggingExceptionHandler.class);
+    
+    @Override
+    public void onException(Throwable t) {
+        log.error("Oopsy daisy", t);
+    }
 
 }

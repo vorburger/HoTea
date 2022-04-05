@@ -9,9 +9,9 @@ import org.spongepowered.api.text.Text;
 
 public class HelloWorldCommand implements CommandExecutor {
 
-	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		src.sendMessage(Text.builder("yo!").build());
-		return CommandResult.success();
-	}
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        src.sendMessage(Text.builder("yo!").build());
+        return CommandResult.success();
+    }
 
 }

@@ -1,76 +1,76 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>ch.vorburger</groupId>
-	<artifactId>hotea</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+    <groupId>ch.vorburger</groupId>
+    <artifactId>hotea</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
 
-	<build>
-		<finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<!-- Lets target Java 8 only, as that will have no PermGen issues anymore 
-						after frequent Class reloading -->
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <!-- Lets target Java 8 only, as that will have no PermGen issues anymore 
+                        after frequent Class reloading -->
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-	<properties>
-		<slf4j.version>1.7.19</slf4j.version>
-	</properties>
+    <properties>
+        <slf4j.version>1.7.19</slf4j.version>
+    </properties>
 
-	<dependencies>
+    <dependencies>
 
-	   <!-- Please keep dependencies of this library minimal.
-	        This helps with avoiding funky ClassLoader issues in applications using it.
-	    -->
+       <!-- Please keep dependencies of this library minimal.
+            This helps with avoiding funky ClassLoader issues in applications using it.
+        -->
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-			<!-- This is intentionally scope provided, so that the application using
-				Hotea can provide their version, instead of dragging on ours. Normally this
-				would work OK thanks to Maven, but when using this library (Hotea) in an
-				application built with Gradle and using (johnrengelman) shadow, it's
-				safer to make extra sure that our version of slf4j does not get
-				included by mistake in shaded JAR; this will prevent ClassLoader
-				surprises in the using application due to different slf4j. -->
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>${slf4j.version}</version>
-			<!-- This is scope provided instead of test just so that the DirectoryWatcherMain
-				has it on it's classpath; that useful for dev tests, and potentially customer
-				debugging. -->
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>18.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.jayway.awaitility</groupId>
-			<artifactId>awaitility</artifactId>
-			<version>1.6.3</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <!-- This is intentionally scope provided, so that the application using
+                Hotea can provide their version, instead of dragging on ours. Normally this
+                would work OK thanks to Maven, but when using this library (Hotea) in an
+                application built with Gradle and using (johnrengelman) shadow, it's
+                safer to make extra sure that our version of slf4j does not get
+                included by mistake in shaded JAR; this will prevent ClassLoader
+                surprises in the using application due to different slf4j. -->
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <!-- This is scope provided instead of test just so that the DirectoryWatcherMain
+                has it on it's classpath; that useful for dev tests, and potentially customer
+                debugging. -->
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>1.6.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

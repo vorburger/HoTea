@@ -33,10 +33,10 @@ import java.net.URLClassLoader;
  */
 public interface HotPluginManager {
 
-	HotPlugins loadPlugins(URLClassLoader classLoader);
+    HotPlugins loadPlugins(URLClassLoader classLoader);
 
-	void unloadPlugins(HotPlugins plugins);
+    void unloadPlugins(HotPlugins plugins);
 
-	interface HotPlugins {
-	}
+    interface HotPlugins {
+    }
 }

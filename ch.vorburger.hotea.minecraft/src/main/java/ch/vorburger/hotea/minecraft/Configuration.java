@@ -7,10 +7,10 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
 @ConfigSerializable class Configuration {
 
-	@Setting List<HotPluginsLocation> hotPluginsLocations;
+    @Setting List<HotPluginsLocation> hotPluginsLocations;
 
-	@ConfigSerializable static class HotPluginsLocation {
-		@Setting String eclipseDotClasspathFileLocation;
-		@Setting List<String> classpathLocations;
-	}
+    @ConfigSerializable static class HotPluginsLocation {
+        @Setting String eclipseDotClasspathFileLocation;
+        @Setting List<String> classpathLocations;
+    }
 }

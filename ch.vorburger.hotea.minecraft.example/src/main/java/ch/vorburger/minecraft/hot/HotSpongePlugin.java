@@ -18,29 +18,29 @@ import org.spongepowered.api.text.Text;
 @Plugin(id = "ch.vorburger.minecraft.hot.example", name = "HOT Sponge Plug-In", version = "1.0")
 public class HotSpongePlugin {
 
-	@Inject	Game game;
-	@Inject PluginContainer plugin;
-	@Inject Logger logger;
+    @Inject    Game game;
+    @Inject PluginContainer plugin;
+    @Inject Logger logger;
 
-	Optional<CommandMapping> commandMapping = Optional.empty();
+    Optional<CommandMapping> commandMapping = Optional.empty();
 
-	@Listener
-	public void onPluginLoaded(GameStartingServerEvent event) {
-		logger.info("I'm loaded! ;)");
+    @Listener
+    public void onPluginLoaded(GameStartingServerEvent event) {
+        logger.info("I'm loaded! ;)");
 
-		CommandSpec myCommandSpec = CommandSpec.builder()
-			    .description(Text.of("Hello World Command"))
-			    .executor(new HelloWorldCommand())
-			    .build();
-		commandMapping = game.getCommandManager().register(plugin, myCommandSpec, "hello");
-	}
+        CommandSpec myCommandSpec = CommandSpec.builder()
+                .description(Text.of("Hello World Command"))
+                .executor(new HelloWorldCommand())
+                .build();
+        commandMapping = game.getCommandManager().register(plugin, myCommandSpec, "hello");
+    }
 
-	@Listener
-	public void onPluginUnloading(GameStoppingServerEvent event) {
-		logger.info("I'm unloading.. :(");
-		if (commandMapping.isPresent()) {
-			game.getCommandManager().removeMapping(commandMapping.get());
-		}
-	}
+    @Listener
+    public void onPluginUnloading(GameStoppingServerEvent event) {
+        logger.info("I'm unloading.. :(");
+        if (commandMapping.isPresent()) {
+            game.getCommandManager().removeMapping(commandMapping.get());
+        }
+    }
 
 }

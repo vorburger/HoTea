@@ -15,30 +15,30 @@ import ch.vorburger.hotea.watchdir.DirectoryWatcher;
  */
 public interface HotClassLoader extends Closeable {
 
-	/**
-	 * Do NOT "keep" the ClassLoader returned by this without handling its
-	 * dynamic replacement through a HotClassLoaderListener - it will keep
-	 * changing!
-	 */
-	ClassLoader getCurrentClassLoader();
+    /**
+     * Do NOT "keep" the ClassLoader returned by this without handling its
+     * dynamic replacement through a HotClassLoaderListener - it will keep
+     * changing!
+     */
+    ClassLoader getCurrentClassLoader();
 
-	List<HotClassLoader.Listener> getListeners();
-	
-	interface Listener {
+    List<HotClassLoader.Listener> getListeners();
+    
+    interface Listener {
 
-		/**
-		 * Notification of new ClassLoader availability event.
-		 * 
-		 * @param newClassLoader
-		 * @throws Throwable if anything went wrong - the caller will log this
-		 */
-		void onReload(ClassLoader newClassLoader) throws Throwable;
-	}
-	
-	interface ExceptionHandler extends DirectoryWatcher.ExceptionHandler {
-		 @Override void onException(Throwable t);
-	}
-	
-	@Override void close(); // do NOT throws (IO)Exception
+        /**
+         * Notification of new ClassLoader availability event.
+         * 
+         * @param newClassLoader
+         * @throws Throwable if anything went wrong - the caller will log this
+         */
+        void onReload(ClassLoader newClassLoader) throws Throwable;
+    }
+    
+    interface ExceptionHandler extends DirectoryWatcher.ExceptionHandler {
+         @Override void onException(Throwable t);
+    }
+    
+    @Override void close(); // do NOT throws (IO)Exception
 
 }

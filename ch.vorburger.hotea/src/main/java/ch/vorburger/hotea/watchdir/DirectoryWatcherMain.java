@@ -18,37 +18,37 @@ import ch.vorburger.hotea.watchdir.DirectoryWatcher.Listener;
  */
 public class DirectoryWatcherMain {
 
-	public static void main(String[] args) throws IOException, InterruptedException {
-		if (args.length < 1) {
-			System.err.println("USAGE: <root-directory-to-watch-for-changes>");
-			return;
-		}
+    public static void main(String[] args) throws IOException, InterruptedException {
+        if (args.length < 1) {
+            System.err.println("USAGE: <root-directory-to-watch-for-changes>");
+            return;
+        }
 
-		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
 
-		File dir = new File(args[0]);
-		DirectoryWatcherImpl dw = (DirectoryWatcherImpl) new DirectoryWatcherBuilder().path(dir)
-				// Using explicit anonymous inner classes instead of Lambdas for clarity to readers
-				.listener(new Listener() {
-					@Override
-					public void onChange(Path path, ChangeKind changeKind) throws Throwable {
-						System.out.println(changeKind.toString() + " " + path.toString());
-					}
+        File dir = new File(args[0]);
+        DirectoryWatcherImpl dw = (DirectoryWatcherImpl) new DirectoryWatcherBuilder().path(dir)
+                // Using explicit anonymous inner classes instead of Lambdas for clarity to readers
+                .listener(new Listener() {
+                    @Override
+                    public void onChange(Path path, ChangeKind changeKind) throws Throwable {
+                        System.out.println(changeKind.toString() + " " + path.toString());
+                    }
 
-				}).exceptionHandler(new ExceptionHandler() {
-					@Override
-					public void onException(Throwable t) {
-						t.printStackTrace();
-					}
-					
-				}).build();
+                }).exceptionHandler(new ExceptionHandler() {
+                    @Override
+                    public void onException(Throwable t) {
+                        t.printStackTrace();
+                    }
+                    
+                }).build();
 
-		// This is just because it's a main(), you normally would NOT do this:
-		dw.thread.join();
-		
-		// You must close() a DirectoryWatcher when you don't need it anymore
-		// (In this main() scenario this will unlikely ever actually get reached; this is just an illustration.)
-		dw.close();
-	}
+        // This is just because it's a main(), you normally would NOT do this:
+        dw.thread.join();
+        
+        // You must close() a DirectoryWatcher when you don't need it anymore
+        // (In this main() scenario this will unlikely ever actually get reached; this is just an illustration.)
+        dw.close();
+    }
 
 }
