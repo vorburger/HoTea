@@ -106,23 +106,6 @@ class HotClassLoaderImpl implements HotClassLoader {
         return newWatchers;
     }
 
-    // Duh, what a mess this is in Java! ;) Check out:
-    //  * https://weblogs.java.net/blog/kohsuke/archive/2007/04/how_to_convert.html
-    //  * http://stackoverflow.com/questions/18520972/converting-java-file-url-to-file-path-platform-independent-including-u
-    //  * http://stackoverflow.com/questions/2166039/java-how-to-get-a-file-from-an-escaped-url
-    //  * https://wiki.eclipse.org/Eclipse/UNC_Paths
-// Since passing List<Path> instead of List<URL> into setUpFileChangeListeners we don't actually need this anymore
-//    protected Optional<Path> getPathFromURL(URL url) {
-//        if (!"file".equalsIgnoreCase(url.getProtocol()))
-//            return Optional.empty();
-//        try {
-//            Path path = Paths.get(url.toURI());
-//            return Optional.ofNullable(path);
-//        } catch (URISyntaxException e) {
-//            return Optional.empty();
-//        }
-//    }
-
     protected URL getURLFromPath(Path path) throws IllegalArgumentException {
         URL url;
         try {
