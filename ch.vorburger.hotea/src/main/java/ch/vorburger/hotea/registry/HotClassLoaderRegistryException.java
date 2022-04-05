@@ -10,5 +10,4 @@ public class HotClassLoaderRegistryException extends Exception {
     public HotClassLoaderRegistryException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }

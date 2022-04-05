@@ -28,17 +28,16 @@ public class QuietPeriodListener implements Listener {
         this.exceptionHandler = exceptionHandler;
     }
 
-    @Override
-    public synchronized void onChange(Path path, ChangeKind changeKind) throws Throwable {
+    @Override public synchronized void onChange(Path path, ChangeKind changeKind) throws Throwable {
         if (thread != null && thread.isAlive()) {
             sleepAgain = true;
-            //System.out.println("sleepAgain = true");
+            // System.out.println("sleepAgain = true");
         } else {
             Runnable r = () -> {
                 try {
                     do {
                         sleepAgain = false;
-                        //System.out.println("sleepAgain = false");
+                        // System.out.println("sleepAgain = false");
                         Thread.sleep(quietPeriodInMS);
                     } while (sleepAgain);
                     delegate.onChange(path, changeKind);

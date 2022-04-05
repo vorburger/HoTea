@@ -27,13 +27,11 @@ public class DirectoryAndFileWatcherTest {
     AssertableExceptionHandler assertableExceptionHandler;
     volatile boolean changed;
 
-    @BeforeClass
-    static public void configureSlf4jSimpleShowAllLogs() {
+    @BeforeClass static public void configureSlf4jSimpleShowAllLogs() {
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
     }
 
-    @Test
-    public void testFileWatcher() throws Throwable {
+    @Test public void testFileWatcher() throws Throwable {
         assertableExceptionHandler = new AssertableExceptionHandler();
         final File dir = new File("target/tests/FileWatcherTest/");
         final File subDir = new File(dir.getParentFile(), "subDir");
@@ -44,11 +42,10 @@ public class DirectoryAndFileWatcherTest {
         Files.write("bo", new File(subDir, "bo.txt"), Charsets.US_ASCII);
 
         changed = false;
-        try (DirectoryWatcher dw = new FileWatcherBuilder()
-                .path(file).listener((p, c) -> {
-                        assertFalse(changed); // We want this to only be called once
-                        changed = true;
-                    }).exceptionHandler(assertableExceptionHandler).build()) {
+        try (DirectoryWatcher dw = new FileWatcherBuilder().path(file).listener((p, c) -> {
+            assertFalse(changed); // We want this to only be called once
+            changed = true;
+        }).exceptionHandler(assertableExceptionHandler).build()) {
 
             // We want it to call the listener once for setup, even without any change
             assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
@@ -85,8 +82,7 @@ public class DirectoryAndFileWatcherTest {
         }
     }
 
-    @Test
-    public void testDirectoryWatcher() throws Throwable {
+    @Test public void testDirectoryWatcher() throws Throwable {
         assertableExceptionHandler = new AssertableExceptionHandler();
         final File dir = new File("target/tests/DirectoryWatcherTest/some/sub/directory");
         dir.mkdirs();
@@ -96,11 +92,10 @@ public class DirectoryAndFileWatcherTest {
         subDir.delete();
 
         changed = false;
-        try (DirectoryWatcher dw = new DirectoryWatcherBuilder()
-                .path(dir.getParentFile().getParentFile()).listener((p, c) -> {
-                        assertFalse(changed); // We want this to only be called once
-                        changed = true;
-                    }).exceptionHandler(assertableExceptionHandler).build()) {
+        try (DirectoryWatcher dw = new DirectoryWatcherBuilder().path(dir.getParentFile().getParentFile()).listener((p, c) -> {
+            assertFalse(changed); // We want this to only be called once
+            changed = true;
+        }).exceptionHandler(assertableExceptionHandler).build()) {
 
             // We want it to call the listener once for setup, even without any change
             assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
@@ -117,8 +112,8 @@ public class DirectoryAndFileWatcherTest {
             Files.write("yo", newFile, Charsets.US_ASCII);
             assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
             await().
-                // conditionEvaluationListener(new ConditionEvaluationLogger()).
-                atMost(1, SECONDS).until(() -> changed, is(true));
+            // conditionEvaluationListener(new ConditionEvaluationLogger()).
+                    atMost(1, SECONDS).until(() -> changed, is(true));
             assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
 
             changed = false;
@@ -133,18 +128,15 @@ public class DirectoryAndFileWatcherTest {
         }
     }
 
-    @Test(expected=AssertionError.class)
-    public void testDirectoryWatcherListenerExceptionPropagation() throws Throwable {
+    @Test(expected = AssertionError.class) public void testDirectoryWatcherListenerExceptionPropagation() throws Throwable {
         assertableExceptionHandler = new AssertableExceptionHandler();
         final File testFile = new File("target/tests/DirectoryWatcherTest/someFile");
         testFile.delete();
         final File dir = testFile.getParentFile();
         dir.mkdirs();
-        try (DirectoryWatcher dw = new DirectoryWatcherBuilder().path(dir)
-                .quietPeriodInMS(0)
-                .listener((p, c) -> {
-                    fail("duh!");
-                }).exceptionHandler(assertableExceptionHandler).build()) {
+        try (DirectoryWatcher dw = new DirectoryWatcherBuilder().path(dir).quietPeriodInMS(0).listener((p, c) -> {
+            fail("duh!");
+        }).exceptionHandler(assertableExceptionHandler).build()) {
 
             Files.write("yo", testFile, Charsets.US_ASCII);
             assertableExceptionHandler.assertNoErrorInTheBackgroundThread();

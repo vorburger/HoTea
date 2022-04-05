@@ -24,18 +24,17 @@ public class FileWatcherBuilder extends DirectoryWatcherBuilder {
         return (FileWatcherBuilder) super.path(fileNotDirectory);
     }
 
-    @Override
-    public DirectoryWatcher build() throws IOException {
+    @Override public DirectoryWatcher build() throws IOException {
         check();
         if (!path.toFile().isFile())
-            throw new IllegalStateException("When using FileWatcherBuilder, set path() to a single file, not a directory (use DirectoryWatcherBuilder to watch a directory, and it's subdirectories)");
+            throw new IllegalStateException(
+                    "When using FileWatcherBuilder, set path() to a single file, not a directory (use DirectoryWatcherBuilder to watch a directory, and it's subdirectories)");
         // NOTE We do want to wrap the FileWatcherListener inside the QuietPeriodListener, and not the other way around!
         Listener wrap = getQuietListener(new FileWatcherListener(path, listener));
         DirectoryWatcherImpl watcher = new DirectoryWatcherImpl(false, path.getParent(), wrap, exceptionHandler);
         firstListenerNotification();
         return watcher;
     }
-
 
     protected static class FileWatcherListener implements Listener {
 
@@ -47,13 +46,10 @@ public class FileWatcherBuilder extends DirectoryWatcherBuilder {
             this.delegate = listenerToWrap;
         }
 
-        @Override
-        public void onChange(Path path, ChangeKind changeKind) throws Throwable {
+        @Override public void onChange(Path path, ChangeKind changeKind) throws Throwable {
             if (path.equals(fileToWatch)) {
                 delegate.onChange(path, changeKind);
             }
         }
     }
-
-
 }

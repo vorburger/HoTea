@@ -17,17 +17,17 @@ public class AssertableExceptionHandler extends LoggingExceptionHandler implemen
     private final static Logger log = LoggerFactory.getLogger(AssertableExceptionHandler.class);
 
     // This stuff isn't 100% concurrency kosher, but "good enough" to cover the tests..
-    private Object lockObject = new Object();
+    private final Object lockObject = new Object();
     private volatile Throwable lastThrowable = null;
 
-    @Override
-    public void onException(Throwable t) {
+    @Override public void onException(Throwable t) {
         synchronized (lockObject) {
             super.onException(t);
-            if (lastThrowable == null) // don't overwrite, if we already have one (that hasn't been checked yet)
+            if (lastThrowable == null) { // don't overwrite, if we already have one (that hasn't been checked yet)
                 lastThrowable = t;
-            else
+            } else { // don't overwrite, if we already have one (that hasn't been checked yet)
                 log.error("There is already a previous lastThrowable which hasn't been asserted, yet; so ignoring this", t);
+            }
         }
     }
 
@@ -39,7 +39,8 @@ public class AssertableExceptionHandler extends LoggingExceptionHandler implemen
                 Throwable theThrowable = lastThrowable;
                 lastThrowable = null;
                 // NOT just throw throwable (this gives us more information via two stack traces)
-                throw new AssertionError("Failed to assert that no error occured in the background Thread (see nested cause)", theThrowable);
+                throw new AssertionError("Failed to assert that no error occured in the background Thread (see nested cause)",
+                        theThrowable);
             }
         }
     }

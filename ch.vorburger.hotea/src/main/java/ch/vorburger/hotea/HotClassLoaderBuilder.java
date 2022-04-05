@@ -32,20 +32,24 @@ public class HotClassLoaderBuilder {
 
     public HotClassLoaderBuilder addClasspathEntry(Path path) {
         File file = path.toFile();
-        if (!file.exists())
+        if (!file.exists()) {
             throw new IllegalArgumentException("Does not exist: " + path.toString());
-        if (!file.canRead())
+        }
+        if (!file.canRead()) {
             throw new IllegalArgumentException("Cannot not read: " + path.toString());
-        if (!file.isFile() && !file.isDirectory())
+        }
+        if (!file.isFile() && !file.isDirectory()) {
             throw new IllegalArgumentException("Is neither a directory nor a file: " + path.toString());
+        }
 
         classpathEntries.add(path);
         return this;
     }
 
     public HotClassLoaderBuilder addClasspathEntries(List<Path> paths) {
-        for (Path path : paths)
+        for (Path path : paths) {
             addClasspathEntry(path);
+        }
         return this;
     }
 
@@ -67,16 +71,20 @@ public class HotClassLoaderBuilder {
     /**
      * Builds the first hot ClassLoader.
      *
-     * @return a ClassLoader.  Use this to get your initial classes from, but do NOT hold on to this; replace this when the HotClassLoaderListener give you a new one!
+     * @return a ClassLoader. Use this to get your initial classes from, but do NOT hold on to this; replace this when the
+     *             HotClassLoaderListener give you a new one!
      *
-     * @throws IllegalStateException if no classpath entry has been added (no Listener is OK - this simple means that it will not watch for changes and hot reload)
-     * @throws IllegalArgumentException if any of the added classpath entries can not be converted to URLs as needed by the URLClassLoader
-     * @throws IOException if there was an IO related problem with accessing one of the classpath entry files/directories etc.
+     * @throws IllegalStateException    if no classpath entry has been added (no Listener is OK - this simple means that it
+     *                                  will not watch for changes and hot reload)
+     * @throws IllegalArgumentException if any of the added classpath entries can not be converted to URLs as needed by the
+     *                                  URLClassLoader
+     * @throws IOException              if there was an IO related problem with accessing one of the classpath entry
+     *                                  files/directories etc.
      */
     public HotClassLoader build() throws IllegalStateException, IllegalArgumentException, IOException {
-        if (classpathEntries.isEmpty())
+        if (classpathEntries.isEmpty()) {
             throw new IllegalStateException("Needs add least one classpath entry added");
+        }
         return new HotClassLoaderImpl(classpathEntries, parentClassLoader, listeners, exceptionHandler);
     }
-
 }

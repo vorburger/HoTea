@@ -35,9 +35,8 @@ public interface HotClassLoader extends Closeable {
     }
 
     interface ExceptionHandler extends DirectoryWatcher.ExceptionHandler {
-         @Override void onException(Throwable t);
+        @Override void onException(Throwable t);
     }
 
     @Override void close(); // do NOT throws (IO)Exception
-
 }

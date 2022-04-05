@@ -17,8 +17,7 @@ public class QuietPeriodListenerTest {
     AssertableExceptionHandler assertableExceptionHandler;
     volatile boolean notified;
 
-    @Test
-    public void testQuietPeriodListener() throws Throwable {
+    @Test public void testQuietPeriodListener() throws Throwable {
         assertableExceptionHandler = new AssertableExceptionHandler();
         Listener originalListener = (path, changeKind) -> {
             assertFalse(notified); // We want this to only be called once
@@ -39,7 +38,6 @@ public class QuietPeriodListenerTest {
         assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
         await().atMost(1, SECONDS).until(() -> notified, is(true));
         assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
-
 
         notified = false;
         quietListener.onChange(null, null);

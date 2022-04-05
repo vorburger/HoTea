@@ -54,7 +54,8 @@ public class DirectoryWatcherBuilder {
     public DirectoryWatcher build() throws IOException {
         check();
         if (!path.toFile().isDirectory())
-            throw new IllegalStateException("When using DirectoryWatcherBuilder, set path() to a directory, not a file (use FileWatcherBuilder to watch a single file)");
+            throw new IllegalStateException(
+                    "When using DirectoryWatcherBuilder, set path() to a directory, not a file (use FileWatcherBuilder to watch a single file)");
         DirectoryWatcherImpl watcher = new DirectoryWatcherImpl(true, path, getQuietListener(listener), exceptionHandler);
         firstListenerNotification();
         return watcher;

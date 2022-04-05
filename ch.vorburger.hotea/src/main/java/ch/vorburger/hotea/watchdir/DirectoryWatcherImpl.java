@@ -32,11 +32,13 @@ import org.slf4j.LoggerFactory;
 public class DirectoryWatcherImpl implements DirectoryWatcher {
     private final static Logger log = LoggerFactory.getLogger(DirectoryWatcherImpl.class);
 
-    protected final WatchService watcher = FileSystems.getDefault().newWatchService(); // better final, as it will be accessed by both threads (normally OK either way, but still)
+    protected final WatchService watcher = FileSystems.getDefault().newWatchService(); // better final, as it will be accessed by both
+                                                                                       // threads (normally OK either way, but still)
     protected final Thread thread;
 
     /** Clients should use DirectoryWatcherBuilder */
-    protected DirectoryWatcherImpl(boolean watchSubDirectories, final Path watchBasePath, final Listener listener, ExceptionHandler exceptionHandler) throws IOException {
+    protected DirectoryWatcherImpl(boolean watchSubDirectories, final Path watchBasePath, final Listener listener,
+            ExceptionHandler exceptionHandler) throws IOException {
         if (!watchBasePath.toFile().isDirectory())
             throw new IllegalArgumentException("Not a directory: " + watchBasePath.toString());
 
@@ -122,22 +124,20 @@ public class DirectoryWatcherImpl implements DirectoryWatcher {
             log.trace("Registered: {}", path.toString());
     }
 
-    // Implementation inspired by https://docs.oracle.com/javase/tutorial/essential/io/examples/WatchDir.java, from https://docs.oracle.com/javase/tutorial/essential/io/notification.html
+    // Implementation inspired by https://docs.oracle.com/javase/tutorial/essential/io/examples/WatchDir.java, from
+    // https://docs.oracle.com/javase/tutorial/essential/io/notification.html
 
     protected void registerAll(final Path basePath) throws IOException {
         // register basePath directory and sub-directories
         Files.walkFileTree(basePath, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
-            {
+            @Override public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 registerOne(dir);
                 return FileVisitResult.CONTINUE;
             }
         });
     }
 
-    @Override
-    public void close() {
+    @Override public void close() {
         // The order here is important - first we stop the Thread, then close the Watcher.
         thread.interrupt();
         try {
@@ -147,8 +147,7 @@ public class DirectoryWatcherImpl implements DirectoryWatcher {
         }
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return thread.getName();
     }
 

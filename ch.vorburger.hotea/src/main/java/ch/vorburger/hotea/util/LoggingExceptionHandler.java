@@ -15,9 +15,7 @@ import org.slf4j.LoggerFactory;
 public class LoggingExceptionHandler implements ExceptionHandler {
     private final static Logger log = LoggerFactory.getLogger(LoggingExceptionHandler.class);
 
-    @Override
-    public void onException(Throwable t) {
+    @Override public void onException(Throwable t) {
         log.error("Oopsy daisy", t);
     }
-
 }

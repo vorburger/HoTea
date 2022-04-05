@@ -26,23 +26,22 @@ class HotClassLoaderImpl implements HotClassLoader {
 
     private URLClassLoader currentClassLoader;
 
-    protected HotClassLoaderImpl(List<Path> classpathEntries, ClassLoader parentClassLoader, List<HotClassLoader.Listener> listeners, ExceptionHandler exceptionHandler) throws IOException {
+    protected HotClassLoaderImpl(List<Path> classpathEntries, ClassLoader parentClassLoader, List<HotClassLoader.Listener> listeners,
+            ExceptionHandler exceptionHandler) throws IOException {
         this.listeners = Collections.unmodifiableList(new ArrayList<>(listeners));
         this.exceptionHandler = exceptionHandler;
         this.parentClassLoader = parentClassLoader;
 
-        this.urls = getURLs(classpathEntries);
-        this.currentClassLoader = getNewClassLoader();
-        this.watchers = setUpFileChangeListeners(classpathEntries);
+        urls = getURLs(classpathEntries);
+        currentClassLoader = getNewClassLoader();
+        watchers = setUpFileChangeListeners(classpathEntries);
     }
 
-    @Override
-    public ClassLoader getCurrentClassLoader() {
+    @Override public ClassLoader getCurrentClassLoader() {
         return currentClassLoader;
     }
 
-    @Override
-    public void close() {
+    @Override public void close() {
         // The order here is important - first we close all the Watchers, then the ClassLoader.
         for (DirectoryWatcher directoryWatcher : watchers) {
             directoryWatcher.close();
@@ -65,10 +64,10 @@ class HotClassLoaderImpl implements HotClassLoader {
     }
 
     protected URLClassLoader getNewClassLoader() {
-        if (parentClassLoader == null)
+        if (parentClassLoader == null) {
             return new URLClassLoaderWithBetterMessage(urls); // URLClassLoader.newInstance(urls);
-        else
-            return new URLClassLoaderWithBetterMessage(urls, parentClassLoader); // URLClassLoader.newInstance(urls, parentClassLoader)
+        }
+        return new URLClassLoaderWithBetterMessage(urls, parentClassLoader); // URLClassLoader.newInstance(urls, parentClassLoader)
     }
 
     protected void notifyListeners() {
@@ -86,7 +85,7 @@ class HotClassLoaderImpl implements HotClassLoader {
 
         DirectoryWatcher.Listener dirListener = (path, changeKind) -> {
             URLClassLoader oldClassLoader = currentClassLoader;
-            this.currentClassLoader = getNewClassLoader();
+            currentClassLoader = getNewClassLoader();
             oldClassLoader.close();
             notifyListeners();
         };
@@ -97,8 +96,9 @@ class HotClassLoaderImpl implements HotClassLoader {
 
         for (Path filePath : classpathEntries) {
             // Let's only watch directories, not JARs
-            if (!filePath.toFile().isDirectory())
+            if (!filePath.toFile().isDirectory()) {
                 continue;
+            }
 
             newWatchers.add(new DirectoryWatcherBuilder().path(filePath).listener(dirListener).exceptionHandler(exH).build());
         }
@@ -133,16 +133,16 @@ class HotClassLoaderImpl implements HotClassLoader {
         }
 
         // Just double checking, better safe than sorry
-        if (path.toFile().isDirectory())
-            if (!url.toExternalForm().endsWith("/"))
-                throw new IllegalArgumentException("URL created from Path which is a directory does not end with slash as required by the URLClassLoader: " + path.toString());
+        if (path.toFile().isDirectory() && !url.toExternalForm().endsWith("/")) {
+            throw new IllegalArgumentException(
+                    "URL created from Path which is a directory does not end with slash as required by the URLClassLoader: "
+                            + path.toString());
+        }
 
         return url;
     }
 
-    @Override
-    public List<Listener> getListeners() {
+    @Override public List<Listener> getListeners() {
         return listeners;
     }
-
 }

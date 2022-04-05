@@ -28,23 +28,24 @@ public class URLClassLoaderWithBetterMessage extends URLClassLoader {
         super(urls, parent, factory);
     }
 
-    @Override
-    public Class<?> loadClass(String name) throws ClassNotFoundException {
+    @Override public Class<?> loadClass(String name) throws ClassNotFoundException {
         try {
             return super.loadClass(name);
         } catch (ClassNotFoundException e) {
             String originalMessage = e.getMessage();
             String newMessage = originalMessage + getAllMyURLs();
             ClassNotFoundException newClassNotFoundException = new ClassNotFoundException(newMessage);
-            if (e.getCause() != null)
+            if (e.getCause() != null) {
                 newClassNotFoundException.initCause(e.getCause());
+            }
             throw newClassNotFoundException;
         } catch (LinkageError e) {
             String originalMessage = e.getMessage();
             String newMessage = originalMessage + getAllMyURLs();
             LinkageError newLinkageError = new LinkageError(newMessage);
-            if (e.getCause() != null)
+            if (e.getCause() != null) {
                 newLinkageError.initCause(e.getCause());
+            }
             throw newLinkageError;
         }
     }

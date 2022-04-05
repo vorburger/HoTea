@@ -29,14 +29,12 @@ public class DirectoryWatcherMain {
         DirectoryWatcherImpl dw = (DirectoryWatcherImpl) new DirectoryWatcherBuilder().path(dir)
                 // Using explicit anonymous inner classes instead of Lambdas for clarity to readers
                 .listener(new Listener() {
-                    @Override
-                    public void onChange(Path path, ChangeKind changeKind) throws Throwable {
+                    @Override public void onChange(Path path, ChangeKind changeKind) throws Throwable {
                         System.out.println(changeKind.toString() + " " + path.toString());
                     }
 
                 }).exceptionHandler(new ExceptionHandler() {
-                    @Override
-                    public void onException(Throwable t) {
+                    @Override public void onException(Throwable t) {
                         t.printStackTrace();
                     }
 
