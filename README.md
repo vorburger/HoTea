@@ -22,7 +22,6 @@ Features: (what it does do)
 * Load Java byte code for additional *.classes from directory/-ies and/or JARs, through a child ClassLoader
 * Hot reload such extensions/modules/plugins/bundles whenever any files in the watched classpath directory are updated
 * Notify your code whenever it hot reloaded, so that you can do what you need to do in your code (say cleanly shut down previous instances of your classes, and re-instantiate objects using your new class definitions)
-* _TODO Build *.class files from *.java sources files, and auto. rebuild on any changes (ch.vorburger.hotea.compilewatchedfiles)_
 * No need to follow a particular "Plugin API" at all (of Hotea, there is none) - you can hot (re)load any class implementing any of your own "API" interface
 
 Non-Features, what it does *NOT* do, not today and not planned:

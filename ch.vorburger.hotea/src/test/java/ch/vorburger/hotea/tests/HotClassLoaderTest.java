@@ -122,25 +122,4 @@ public class HotClassLoaderTest {
             }
         }
     }
-
-/*
-    TODO testChangeJavaSourceNotOnClasspath, when ch.vorburger.hotea.compilewatchedfiles is implemented
-
-        String src = "ch/vorburger/hotea/tests/notoncp/SomeInterfaceImplNotOnCP.java";
-        File sourceFileOriginal = new File("src/test/resources/" + src);
-        String sourceText = Files.toString(sourceFileOriginal, Charsets.US_ASCII);
-        String srcPath = "target/tests/srcToCompileOnTheFly/";
-        File sourceFileCopy = new File(srcPath + src);;
-        sourceFileCopy.getParentFile().mkdirs();
-        Files.write(sourceText, sourceFileCopy, Charsets.US_ASCII);
-
-        sourceText = sourceText.replace("hello, world", "world, hello!");
-        Files.write(sourceText, sourceFileCopy, Charsets.US_ASCII);
-
-    private void reset(String sourceText, File sourceFile) throws IOException {
-        sourceText = sourceText.replace("world, hello!", "hello, world");
-        Files.write(sourceText, sourceFile, Charsets.US_ASCII);
-    }
-*/
-
 }
