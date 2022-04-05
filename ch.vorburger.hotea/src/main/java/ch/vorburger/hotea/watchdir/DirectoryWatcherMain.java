@@ -13,7 +13,7 @@ import ch.vorburger.hotea.watchdir.DirectoryWatcher.Listener;
 
 /**
  * main() for DirectoryWatcher.
- * 
+ *
  * @author Michael Vorburger
  */
 public class DirectoryWatcherMain {
@@ -40,12 +40,12 @@ public class DirectoryWatcherMain {
                     public void onException(Throwable t) {
                         t.printStackTrace();
                     }
-                    
+
                 }).build();
 
         // This is just because it's a main(), you normally would NOT do this:
         dw.thread.join();
-        
+
         // You must close() a DirectoryWatcher when you don't need it anymore
         // (In this main() scenario this will unlikely ever actually get reached; this is just an illustration.)
         dw.close();

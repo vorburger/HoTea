@@ -17,7 +17,7 @@ public class QuietPeriodListenerTest {
 
     AssertableExceptionHandler assertableExceptionHandler;
     volatile boolean notified;
-    
+
     @Test
     public void testQuietPeriodListener() throws Throwable {
         assertableExceptionHandler = new AssertableExceptionHandler();
@@ -27,13 +27,13 @@ public class QuietPeriodListenerTest {
         };
 
         Listener quietListener = new QuietPeriodListener(100, originalListener, assertableExceptionHandler);
-        
+
         notified = false;
         quietListener.onChange(null, null);
         assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
         await().atMost(1, SECONDS).until(() -> notified, is(true));
         assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
-        
+
         notified = false;
         quietListener.onChange(null, null);
         quietListener.onChange(null, null);
@@ -41,7 +41,7 @@ public class QuietPeriodListenerTest {
         await().atMost(1, SECONDS).until(() -> notified, is(true));
         assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
 
-        
+
         notified = false;
         quietListener.onChange(null, null);
         assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
@@ -49,7 +49,7 @@ public class QuietPeriodListenerTest {
         assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
 
         Thread.sleep(500);
-        
+
         notified = false;
         quietListener.onChange(null, null);
         assertableExceptionHandler.assertNoErrorInTheBackgroundThread();

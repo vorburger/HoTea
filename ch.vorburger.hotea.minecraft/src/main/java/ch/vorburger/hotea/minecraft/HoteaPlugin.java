@@ -43,7 +43,7 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 public class HoteaPlugin {
 
     // TODO make a public Service API, higher level than HotPluginManager, using which other plugins can register gradle projets as new plugins
-    
+
     private @Inject Logger logger;
     private @Inject @DefaultConfig(sharedRoot = true) Path configPath;
     private @Inject @DefaultConfig(sharedRoot = true) ConfigurationLoader<CommentedConfigurationNode> configManager;
@@ -73,7 +73,7 @@ public class HoteaPlugin {
             throw new IllegalArgumentException("Could not load configuration" , e);
         }
     }
-    
+
     private void loadHotPlugins() {
         closeHotClassLoaders();
         ClassLoader parentClassLoader = HoteaPlugin.class.getClassLoader(); // but NOT org.spongepowered.api.plugin.Plugin, that's another one that leads to a java.lang.LinkageError: loader constraint violation: loader (instance of sun/misc/Launcher$AppClassLoader) previously initiated loading for a different type with name "org/slf4j/Logger"
@@ -83,7 +83,7 @@ public class HoteaPlugin {
                         .setParentClassLoader(parentClassLoader)
                         .setListenerExceptionHandler(exceptionHandler);
                 if (hotPluginsLocation.eclipseDotClasspathFileLocation != null) {
-                    // NOTE: What we are doing here will NOT hot-reload changes to .classpath with e.g. new libraries.. only changes within the classpath entries (notably 'output/**/*.class) as of the time of reading the .classpath 
+                    // NOTE: What we are doing here will NOT hot-reload changes to .classpath with e.g. new libraries.. only changes within the classpath entries (notably 'output/**/*.class) as of the time of reading the .classpath
                     Path path = Paths.get(hotPluginsLocation.eclipseDotClasspathFileLocation.trim());
                     EclipseClasspathFileReader r = new EclipseClasspathFileReader(path);
                     builder.addClasspathEntries(r.getPaths());
@@ -122,11 +122,11 @@ public class HoteaPlugin {
         hotPluginManager = (HotPluginManager) spongePluginManager;
 
         exceptionHandler = t -> logger.error("Trouble from Hotea", t);
-        
+
         fileWatcher = new FileWatcherBuilder().path(configPath).listener((Path path, ChangeKind changeKind) -> {
             logger.info("HOT loading plugins as per {}", configPath);
-            loadConfiguration(); 
-            loadHotPlugins();                
+            loadConfiguration();
+            loadHotPlugins();
         }).exceptionHandler(exceptionHandler).build();
     }
 

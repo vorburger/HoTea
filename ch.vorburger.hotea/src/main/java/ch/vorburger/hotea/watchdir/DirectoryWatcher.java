@@ -8,7 +8,7 @@ import java.nio.file.Path;
 
 /**
  * Watch a directory and be notified on your Listener on changes in it.
- * 
+ *
  * @author Michael Vorburger
  */
 public interface DirectoryWatcher extends Closeable {

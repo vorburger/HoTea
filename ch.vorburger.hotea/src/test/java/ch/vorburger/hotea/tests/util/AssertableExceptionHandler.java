@@ -11,7 +11,7 @@ import ch.vorburger.hotea.util.LoggingExceptionHandler;
 
 /**
  * ExceptionHandler useful in multi-threaded tests.
- * 
+ *
  * @author Michael Vorburger
  */
 public class AssertableExceptionHandler extends LoggingExceptionHandler implements ExceptionHandler {
@@ -31,7 +31,7 @@ public class AssertableExceptionHandler extends LoggingExceptionHandler implemen
                 log.error("There is already a previous lastThrowable which hasn't been asserted, yet; so ignoring this", t);
         }
     }
-    
+
     public void assertNoErrorInTheBackgroundThread() throws Throwable {
         Thread.yield();
         Thread.sleep(100); // slow!
@@ -63,5 +63,5 @@ public class AssertableExceptionHandler extends LoggingExceptionHandler implemen
             lastThrowable = null;
         }
     }
-    
+
 }

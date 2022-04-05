@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * DirectoryWatcher based on java.nio.file.WatchService.
- * 
+ *
  * @author Michael Vorburger
  */
 // intentionally package local, for now
@@ -64,7 +64,7 @@ public class DirectoryWatcherImpl implements DirectoryWatcher {
                         log.error("Received {} (TODO how to handle?)", kind.name());
                         continue;
                     }
-                    
+
                     Path relativePath = (Path) event.context();
                     if (relativePath == null) {
                         log.error("Received {} but event.context() == null: {}", kind.name(), event.toString());
@@ -106,7 +106,7 @@ public class DirectoryWatcherImpl implements DirectoryWatcher {
         // should never be needed, but still be better safe than sorry.. ;-)
         thread.setUncaughtExceptionHandler((t, e) -> {
             exceptionHandler.onException(e);
-        }); 
+        });
         thread.start();
     }
 
@@ -116,7 +116,7 @@ public class DirectoryWatcherImpl implements DirectoryWatcher {
         else
             registerOne(path);
     }
-    
+
     protected void registerOne(final Path path) throws IOException {
         path.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
         if (log.isTraceEnabled())

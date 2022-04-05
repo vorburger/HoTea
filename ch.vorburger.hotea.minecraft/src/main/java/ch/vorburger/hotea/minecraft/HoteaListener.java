@@ -40,7 +40,7 @@ public class HoteaListener implements Listener {
             pluginManager.unloadPlugins(hotPlugins);
         }
     }
-    
+
     private void runOnMainServerThread(Runnable run) {
         Scheduler scheduler = Sponge.getScheduler();
         Task.Builder taskBuilder = scheduler.createTaskBuilder();

@@ -23,22 +23,22 @@ public interface HotClassLoader extends Closeable {
     ClassLoader getCurrentClassLoader();
 
     List<HotClassLoader.Listener> getListeners();
-    
+
     interface Listener {
 
         /**
          * Notification of new ClassLoader availability event.
-         * 
+         *
          * @param newClassLoader
          * @throws Throwable if anything went wrong - the caller will log this
          */
         void onReload(ClassLoader newClassLoader) throws Throwable;
     }
-    
+
     interface ExceptionHandler extends DirectoryWatcher.ExceptionHandler {
          @Override void onException(Throwable t);
     }
-    
+
     @Override void close(); // do NOT throws (IO)Exception
 
 }

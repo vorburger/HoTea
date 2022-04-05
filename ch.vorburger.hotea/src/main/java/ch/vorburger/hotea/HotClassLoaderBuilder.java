@@ -13,7 +13,7 @@ import ch.vorburger.hotea.util.LoggingExceptionHandler;
 
 /**
  * Builder for HotClassLoader.
- * 
+ *
  * @author Michael Vorburger
  */
 public class HotClassLoaderBuilder {
@@ -22,11 +22,11 @@ public class HotClassLoaderBuilder {
     protected List<HotClassLoader.Listener> listeners = new ArrayList<>();
     protected HotClassLoader.ExceptionHandler exceptionHandler = new LoggingExceptionHandler();
     protected ClassLoader parentClassLoader;
-    
+
     public HotClassLoaderBuilder addClasspathEntry(File file) {
         return addClasspathEntry(file.toPath());
     }
-    
+
     public HotClassLoaderBuilder addClasspathEntry(String pathName) {
         return addClasspathEntry(new File(pathName));
     }
@@ -49,7 +49,7 @@ public class HotClassLoaderBuilder {
             addClasspathEntry(path);
         return this;
     }
-    
+
     public HotClassLoaderBuilder addListener(HotClassLoader.Listener listener) {
         listeners.add(listener);
         return this;
@@ -67,12 +67,12 @@ public class HotClassLoaderBuilder {
 
     /**
      * Builds the first hot ClassLoader.
-     * 
+     *
      * @return a ClassLoader.  Use this to get your initial classes from, but do NOT hold on to this; replace this when the HotClassLoaderListener give you a new one!
-     * 
+     *
      * @throws IllegalStateException if no classpath entry has been added (no Listener is OK - this simple means that it will not watch for changes and hot reload)
      * @throws IllegalArgumentException if any of the added classpath entries can not be converted to URLs as needed by the URLClassLoader
-     * @throws IOException if there was an IO related problem with accessing one of the classpath entry files/directories etc.  
+     * @throws IOException if there was an IO related problem with accessing one of the classpath entry files/directories etc.
      */
     public HotClassLoader build() throws IllegalStateException, IllegalArgumentException, IOException {
         if (classpathEntries.isEmpty())

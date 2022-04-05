@@ -25,7 +25,7 @@ import com.google.common.io.Files;
 
 /**
  * Tests for HotClassLoaderBuilder.
- * 
+ *
  * @author Michael Vorburger
  */
 public class HotClassLoaderTest {
@@ -38,7 +38,7 @@ public class HotClassLoaderTest {
 //    static public void configureSlf4jSimpleShowAllLogs() {
 //        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
 //    }
-    
+
     @Test public void testLoadBinaryJavaClassNotOnClasspath() throws Exception {
         File targetClassFile = copyClassFile("SomeInterfaceImpl-hello_world.class");
         try(HotClassLoader hcl = new HotClassLoaderBuilder().addClasspathEntry(new File("target/tests/hot/classes")).build()) {
@@ -79,20 +79,20 @@ public class HotClassLoaderTest {
             assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
             ClassLoader firstClassLoader = hcl.getCurrentClassLoader();
             assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
-            
+
             // Now replace the class file with another implementation
             File newTargetClassFile = copyClassFile("SomeInterfaceImpl-world_hello.class");
             assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
-            
+
             // Wait for (2nd!) reload
             await().atMost(1, SECONDS).until(() -> i, greaterThanOrEqualTo(2));
             assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
-    
+
             ClassLoader secondClassLoader = hcl.getCurrentClassLoader();
             assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
             assertFalse(firstClassLoader.equals(secondClassLoader));
             assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
-            
+
             assertEquals("world, hello!", someAPI.whatup());
             assertableExceptionHandler.assertNoErrorInTheBackgroundThread();
             assertTrue(newTargetClassFile.delete());
@@ -109,7 +109,7 @@ public class HotClassLoaderTest {
             assertableExceptionHandler.assertErrorMessageCaughtFromTheBackgroundThreadContains("duh!");
         }
     }
-    
+
     @Test public void testExceptionMessageContainsPath() throws Exception {
         try (HotClassLoader hcl = new HotClassLoaderBuilder().addClasspathEntry(new File(".")).build()) {
             ClassLoader classLoader = hcl.getCurrentClassLoader();
@@ -122,7 +122,7 @@ public class HotClassLoaderTest {
             }
         }
     }
-    
+
 /*
     TODO testChangeJavaSourceNotOnClasspath, when ch.vorburger.hotea.compilewatchedfiles is implemented
 
@@ -132,14 +132,14 @@ public class HotClassLoaderTest {
         String srcPath = "target/tests/srcToCompileOnTheFly/";
         File sourceFileCopy = new File(srcPath + src);;
         sourceFileCopy.getParentFile().mkdirs();
-        Files.write(sourceText, sourceFileCopy, Charsets.US_ASCII);                
+        Files.write(sourceText, sourceFileCopy, Charsets.US_ASCII);
 
         sourceText = sourceText.replace("hello, world", "world, hello!");
         Files.write(sourceText, sourceFileCopy, Charsets.US_ASCII);
- 
+
     private void reset(String sourceText, File sourceFile) throws IOException {
         sourceText = sourceText.replace("world, hello!", "hello, world");
-        Files.write(sourceText, sourceFile, Charsets.US_ASCII);        
+        Files.write(sourceText, sourceFile, Charsets.US_ASCII);
     }
 */
 

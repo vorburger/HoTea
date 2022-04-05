@@ -9,13 +9,13 @@ import java.net.URLStreamHandlerFactory;
 
 /**
  * An URLClassLoader which includes all the URLs it searched in its Exceptions.
- * 
+ *
  * @author Michael Vorburger
  */
 public class URLClassLoaderWithBetterMessage extends URLClassLoader {
 
     protected String allMyURLs;
-    
+
     public URLClassLoaderWithBetterMessage(URL[] urls) {
         super(urls);
     }

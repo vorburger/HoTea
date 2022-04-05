@@ -20,7 +20,7 @@ import ch.vorburger.hotea.watchdir.DirectoryWatcherBuilder;
 class HotClassLoaderImpl implements HotClassLoader {
     private final static Logger log = LoggerFactory.getLogger(HotClassLoaderImpl.class);
 
-    private final URL[] urls;    
+    private final URL[] urls;
     private final List<HotClassLoader.Listener> listeners;
     private final ExceptionHandler exceptionHandler;
     private final List<DirectoryWatcher> watchers;
@@ -32,7 +32,7 @@ class HotClassLoaderImpl implements HotClassLoader {
         this.listeners = Collections.unmodifiableList(new ArrayList<>(listeners));
         this.exceptionHandler = exceptionHandler;
         this.parentClassLoader = parentClassLoader;
-        
+
         this.urls = getURLs(classpathEntries);
         this.currentClassLoader = getNewClassLoader();
         this.watchers = setUpFileChangeListeners(classpathEntries);
@@ -69,7 +69,7 @@ class HotClassLoaderImpl implements HotClassLoader {
     protected URLClassLoader getNewClassLoader() {
         if (parentClassLoader == null)
             return new URLClassLoaderWithBetterMessage(urls); // URLClassLoader.newInstance(urls);
-        else 
+        else
             return new URLClassLoaderWithBetterMessage(urls, parentClassLoader); // URLClassLoader.newInstance(urls, parentClassLoader)
     }
 
@@ -82,26 +82,26 @@ class HotClassLoaderImpl implements HotClassLoader {
             }
         }
     }
-    
+
     protected List<DirectoryWatcher> setUpFileChangeListeners(List<Path> classpathEntries) throws IOException {
         ArrayList<DirectoryWatcher> newWatchers = new ArrayList<>(classpathEntries.size());
-        
+
         DirectoryWatcher.Listener dirListener = (path, changeKind) -> {
             URLClassLoader oldClassLoader = currentClassLoader;
             this.currentClassLoader = getNewClassLoader();
             oldClassLoader.close();
             notifyListeners();
         };
-        
+
         ExceptionHandler exH = t -> {
             exceptionHandler.onException(t);
         };
-        
+
         for (Path filePath : classpathEntries) {
             // Let's only watch directories, not JARs
             if (!filePath.toFile().isDirectory())
                 continue;
-            
+
             newWatchers.add(new DirectoryWatcherBuilder().path(filePath).listener(dirListener).exceptionHandler(exH).build());
         }
         newWatchers.trimToSize();
@@ -133,12 +133,12 @@ class HotClassLoaderImpl implements HotClassLoader {
             // This .. "normally" should never happen.
             throw new IllegalArgumentException("URL canont be created from Path due to MalformedURLException: " + path.toString(), e);
         }
-                
+
         // Just double checking, better safe than sorry
         if (path.toFile().isDirectory())
             if (!url.toExternalForm().endsWith("/"))
                 throw new IllegalArgumentException("URL created from Path which is a directory does not end with slash as required by the URLClassLoader: " + path.toString());
-        
+
         return url;
     }
 

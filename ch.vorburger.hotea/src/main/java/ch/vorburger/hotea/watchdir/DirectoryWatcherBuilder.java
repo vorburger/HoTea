@@ -14,7 +14,7 @@ import ch.vorburger.hotea.watchdir.DirectoryWatcher.Listener;
 
 /**
  * Builder for DirectoryWatcher.
- * 
+ *
  * @author Michael Vorburger
  */
 public class DirectoryWatcherBuilder {
@@ -34,7 +34,7 @@ public class DirectoryWatcherBuilder {
         this.path = directory;
         return this;
     }
-    
+
     public DirectoryWatcherBuilder listener(Listener listener) {
         if (this.listener != null)
             throw new IllegalStateException("listener already set");
@@ -46,12 +46,12 @@ public class DirectoryWatcherBuilder {
         this.exceptionHandler = exceptionHandler;
         return this;
     }
-    
+
     public DirectoryWatcherBuilder quietPeriodInMS(long quietPeriodInMS) {
         this.quietPeriodInMS = quietPeriodInMS;
         return this;
     }
-    
+
     public DirectoryWatcher build() throws IOException {
         check();
         if (!path.toFile().isDirectory())

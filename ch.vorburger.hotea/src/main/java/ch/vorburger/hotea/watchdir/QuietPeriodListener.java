@@ -19,10 +19,10 @@ public class QuietPeriodListener implements Listener {
     protected final Listener delegate;
     private final ExceptionHandler exceptionHandler;
     protected final long quietPeriodInMS;
-    
+
     protected Thread thread;
     protected volatile boolean sleepAgain;
-    
+
     protected QuietPeriodListener(long quietPeriodInMS, Listener listenerToWrap, ExceptionHandler exceptionHandler) {
         this.quietPeriodInMS = quietPeriodInMS;
         this.delegate = listenerToWrap;
@@ -49,7 +49,7 @@ public class QuietPeriodListener implements Listener {
             };
             thread = new Thread(r, QuietPeriodListener.class.getName());
             thread.setDaemon(true);
-            thread.start();            
+            thread.start();
         }
     }
 }
