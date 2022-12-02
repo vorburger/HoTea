@@ -45,6 +45,7 @@ Non-Features, what it does *NOT* do, not today and not planned:
 
 * OSGi (eclipse.org/rt: eclipse.org/equinox, eclipse.org/virgo, eclipse.org/gemini; felix.apache.org & karaf.apache.org; bndtools.org BND Tools; Spring Dynamic Modulees DM)
 * [JBoss Modules](https://github.com/jboss-modules/jboss-modules) (and [Doc](https://docs.jboss.org/author/display/MODULES/Home))
+* https://pf4j.org
 * [NucleusPowered/QuickStartModuleLoader](https://github.com/NucleusPowered/QuickStartModuleLoader)
 * http://jpf.sourceforge.net
 * https://code.google.com/p/jspf/ : No hot unload
