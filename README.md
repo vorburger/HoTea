@@ -51,6 +51,10 @@ Non-Features, what it does *NOT* do, not today and not planned:
 * https://code.google.com/p/jspf/ : No hot unload
 * https://code.google.com/p/impala/
 
+## Security & Sandboxing
+
+* https://github.com/jguard-io/jguard
+
 ### Scripting
 
 * JSR 223 `javax.script`
